@@ -69,14 +69,18 @@ sudo apt-get install -y nodejs
 node -v   # 应显示 v20.x
 ```
 
-### 2. 上传并安装项目
+### 2. 从 GitHub 拉取并安装项目
 
 ```bash
-sudo mkdir -p /opt/qimiaoyuzhou.wiki
-# 把项目文件上传到 /opt/qimiaoyuzhou.wiki(建议用 rsync/scp,保留 content/ data/ 目录)
-cd /opt/qimiaoyuzhou.wiki
+sudo apt-get install -y git
+sudo mkdir -p /opt
+cd /opt
+sudo git clone https://github.com/maotianchen/qimiaoyuzhou-wiki.git qimiaoyuzhou.wiki
+cd qimiaoyuzhou.wiki
 sudo npm install --omit=dev
 ```
+
+> 首次部署后,`content/` 与 `data/` 需让服务用户可写:`sudo chown -R www-data:www-data content data`(用户与 systemd unit 中的 `User` 保持一致)。
 
 ### 3. 配置环境变量
 
@@ -85,18 +89,43 @@ sudo cp .env.example .env
 sudo nano .env   # 按需修改 PORT 等
 ```
 
-### 4. 配置 systemd 服务
+### 4. 配置 systemd 服务(长期启用)
 
 编辑 `deploy/qimiaoyuzhou.service`,把 `User` 和 `WorkingDirectory` 改成实际用户与路径:
 
 ```bash
 sudo cp deploy/qimiaoyuzhou.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable --now qimiaoyuzhou
-sudo systemctl status qimiaoyuzhou
+sudo systemctl enable --now qimiaoyuzhou   # enable = 开机自启;--now = 立即启动
+sudo systemctl status qimiaoyuzhou          # 应显示 active (running)
 ```
 
 验证:`curl http://localhost:3000/api/stats` 应返回 JSON。
+
+**systemd 服务特性(已内置)**:
+- `Restart=always`:进程崩溃/被杀后 3 秒自动拉起
+- `enable`:服务器开机自动启动服务
+- `WorkingDirectory` + `EnvironmentFile`:从 `.env` 读取端口与数据目录
+
+**常用运维命令**:
+
+```bash
+sudo systemctl start qimiaoyuzhou        # 启动
+sudo systemctl stop qimiaoyuzhou         # 停止
+sudo systemctl restart qimiaoyuzhou      # 重启(改代码/配置后)
+sudo systemctl status qimiaoyuzhou       # 查看状态与最近日志
+sudo journalctl -u qimiaoyuzhou -f       # 实时查看日志
+sudo journalctl -u qimiaoyuzhou -n 100   # 查看最近 100 行日志
+```
+
+**更新代码后重启**:
+
+```bash
+cd /opt/qimiaoyuzhou.wiki
+sudo git pull                            # 拉取最新代码(从 GitHub)
+sudo npm install --omit=dev              # 依赖有变时
+sudo systemctl restart qimiaoyuzhou
+```
 
 ### 5.(可选)Nginx 反向代理
 
@@ -114,9 +143,41 @@ sudo nginx -t && sudo systemctl reload nginx
 - 服务器上服务用户对 `content/`、`data/` 需有读写权限。
 - GCP 建议:磁盘扩容、快照;后续可把这些目录放到独立磁盘。
 
-### 7. GCP 防火墙
+### 7. 防火墙与端口
 
-确保防火墙放行 80/443(TCP)。如果只走 Nginx,3000 端口可仅对内网开放。
+**需要开放的端口**(取决于是否用 Nginx):
+
+| 场景 | 需开放端口 | 说明 |
+| --- | --- | --- |
+| 只用 Nginx(推荐) | **80**(HTTP)/ **443**(HTTPS) | 外部只访问 Nginx,Nginx 反代到内网 3000 |
+| 无 Nginx,直接暴露 Node | **3000**(HTTP) | 外部直接访问 Node,需另配 HTTPS |
+
+**GCP 防火墙**(Cloud Console → VPC network → Firewall,或 `gcloud`):
+
+```bash
+# 放行 HTTP(如用 Nginx 反代)
+gcloud compute firewall-rules create allow-http \
+  --direction=INGRESS --priority=1000 \
+  --network=default --action=ALLOW \
+  --rules=tcp:80 --source-ranges=0.0.0.0/0
+
+# 放行 HTTPS(配置证书后)
+gcloud compute firewall-rules create allow-https \
+  --direction=INGRESS --priority=1000 \
+  --network=default --action=ALLOW \
+  --rules=tcp:443 --source-ranges=0.0.0.0/0
+```
+
+**Debian 本机防火墙**(如启用 ufw):
+
+```bash
+sudo ufw allow 80/tcp       # HTTP
+sudo ufw allow 443/tcp      # HTTPS
+sudo ufw allow 22/tcp       # SSH(保持已有)
+sudo ufw enable
+```
+
+> 端口 3000 无需对公网开放:有 Nginx 时由 Nginx 访问;即使直连也建议仅在 GCP 防火墙层面只允许本机访问,不要对 `0.0.0.0/0` 放开 3000。
 
 ## REST API
 
