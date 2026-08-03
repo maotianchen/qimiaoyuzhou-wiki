@@ -3,8 +3,16 @@
 const express = require('express');
 const storage = require('../lib/storage');
 const history = require('../lib/history');
+const { renderMarkdown } = require('../lib/render');
 
 const router = express.Router();
+
+// ---- 预览:把 Markdown 渲染成 HTML(与条目页一致,供编辑器实时预览) ----
+router.post('/preview', (req, res) => {
+  const { content } = req.body || {};
+  const { html } = renderMarkdown(content || '');
+  res.json({ html });
+});
 
 // ---- 条目列表 ----
 router.get('/pages', (req, res) => {

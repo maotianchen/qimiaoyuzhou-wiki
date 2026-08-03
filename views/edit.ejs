@@ -22,22 +22,83 @@
             z-index: 0;
             pointer-events: none;
         }
-        nav, main, footer {
-            position: relative;
-            z-index: 1;
-        }
+        nav, main, footer { position: relative; z-index: 1; }
         body nav { background: rgba(255, 255, 255, 0.80) !important; }
         body main { background: rgba(255, 255, 255, 0.85) !important; }
         body footer { background: rgba(255, 255, 255, 0.80) !important; }
-            /* 白底延展到页面最底部,避免底部露出背景色空隙 */
-                    .wiki-serif { font-family: 'Linux Libertine', 'Georgia', 'Times', serif; }
+        .wiki-serif { font-family: 'Linux Libertine', 'Georgia', 'Times', serif; }
         .link-blue { color: #0645ad; text-decoration: none; }
         .link-blue:hover { text-decoration: underline; }
+
         .editor textarea {
             font-family: ui-monospace, Menlo, monospace;
             font-size: 13px;
             line-height: 1.6;
+            resize: vertical;
+            min-height: 420px;
         }
+        .toolbar-btn {
+            padding: 0.35rem 0.55rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            background: #fff;
+            color: #374151;
+            font-size: 13px;
+            cursor: pointer;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .toolbar-btn:hover { background: #f3f4f6; }
+        .toolbar-btn.active { background: #dbeafe; border-color: #93c5fd; }
+        .toolbar-divider { width: 1px; height: 20px; background: #d1d5db; margin: 0 0.25rem; }
+        /* 预览区 Markdown 渲染样式 */
+        .preview-area { font-size: 14px; line-height: 1.7; }
+        .preview-area h1, .preview-area h2, .preview-area h3, .preview-area h4 {
+            font-family: 'Linux Libertine', 'Georgia', 'Times', serif;
+            border-bottom: 1px solid #a2a9b1;
+            padding-bottom: 0.2rem;
+            margin-top: 1.2em;
+            margin-bottom: 0.5em;
+            font-weight: bold;
+        }
+        .preview-area h1 { font-size: 1.6rem; }
+        .preview-area h2 { font-size: 1.4rem; }
+        .preview-area h3 { font-size: 1.2rem; }
+        .preview-area h4 { font-size: 1.1rem; }
+        .preview-area p { margin-bottom: 0.7em; }
+        .preview-area a { color: #0645ad; text-decoration: none; }
+        .preview-area a:hover { text-decoration: underline; }
+        .preview-area ul, .preview-area ol { padding-left: 1.5em; margin-bottom: 0.7em; }
+        .preview-area ul { list-style: disc; }
+        .preview-area ol { list-style: decimal; }
+        .preview-area blockquote {
+            border-left: 3px solid #a2a9b1;
+            padding-left: 1em;
+            color: #555;
+            margin-bottom: 0.7em;
+        }
+        .preview-area code {
+            background: #f3f4f6;
+            padding: 0.1em 0.3em;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        .preview-area pre {
+            background: #f6f8fa;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            padding: 0.8em;
+            overflow-x: auto;
+            margin-bottom: 0.7em;
+        }
+        .preview-area pre code { background: none; padding: 0; }
+        .preview-area table { border-collapse: collapse; margin-bottom: 0.7em; }
+        .preview-area th, .preview-area td { border: 1px solid #a2a9b1; padding: 0.3em 0.5em; }
+        .preview-area th { background: #f3f4f6; }
+        .preview-area img { max-width: 100%; }
+        .preview-area .infobox { float: right; width: 20em; margin: 0 0 1em 1em; font-size: 88%; }
     </style>
 </head>
 <body class="text-gray-800 text-sm leading-6">
@@ -64,17 +125,11 @@
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 py-4 max-w-4xl">
+    <div class="container mx-auto px-4 py-4 max-w-5xl">
         <main class="bg-white border border-gray-300 p-4 md:p-6 shadow-sm">
             <div class="flex items-baseline justify-between border-b border-gray-300 mb-4 pb-1">
                 <h1 class="wiki-serif text-2xl mb-0 pb-0">编辑「<%= page.title %>」</h1>
             </div>
-
-            <p class="text-xs text-gray-500 mb-4">
-                支持 Markdown 语法:<code class="bg-gray-100 px-1">## 二级标题</code>、
-                <code class="bg-gray-100 px-1">**粗体**</code>、
-                <code class="bg-gray-100 px-1">[链接](https://...)</code>。也可嵌入 HTML(如信息栏表格)。
-            </p>
 
             <form id="edit-form" class="editor">
                 <div class="mb-3">
@@ -83,12 +138,63 @@
                            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-400"
                            placeholder="输入标题">
                 </div>
+
                 <div class="mb-3">
-                    <label for="content" class="block font-bold mb-1">正文(Markdown)</label>
-                    <textarea id="content" name="content" rows="24"
-                              class="w-full border border-gray-300 rounded p-3 focus:outline-none focus:border-blue-400"
-                              placeholder="在此输入条目内容..."><%= page.raw %></textarea>
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="font-bold">正文</label>
+                        <div class="flex items-center gap-2">
+                            <!-- 编辑/预览切换(小屏) -->
+                            <div class="md:hidden flex bg-gray-100 rounded overflow-hidden text-xs">
+                                <button type="button" id="mode-edit-btn" class="px-3 py-1 bg-blue-600 text-white">编辑</button>
+                                <button type="button" id="mode-preview-btn" class="px-3 py-1">预览</button>
+                            </div>
+                            <button type="button" id="cheatsheet-toggle" class="text-xs link-blue">语法速查</button>
+                        </div>
+                    </div>
+
+                    <!-- 语法速查小抄(折叠) -->
+                    <div id="cheatsheet" class="hidden mb-2 border border-gray-300 rounded bg-gray-50 p-3 text-xs text-gray-600">
+                        <table class="w-full">
+                            <tr><td class="pr-4 py-1 w-1/2"><code class="bg-white px-1 border"># 标题</code> 或 <code class="bg-white px-1 border">## 二级标题</code></td><td class="py-1">用 # 的数量表示标题级别</td></tr>
+                            <tr><td class="pr-4 py-1"><code class="bg-white px-1 border">**粗体**</code></td><td class="py-1">把文字加粗</td></tr>
+                            <tr><td class="pr-4 py-1"><code class="bg-white px-1 border">*斜体*</code></td><td class="py-1">文字倾斜</td></tr>
+                            <tr><td class="pr-4 py-1"><code class="bg-white px-1 border">- 列表项</code></td><td class="py-1">每行一个 - 就是列表</td></tr>
+                            <tr><td class="pr-4 py-1"><code class="bg-white px-1 border">1. 第一项</code></td><td class="py-1">数字加 . 是编号列表</td></tr>
+                            <tr><td class="pr-4 py-1"><code class="bg-white px-1 border">[文字](https://网址)</code></td><td class="py-1">插入链接</td></tr>
+                            <tr><td class="pr-4 py-1"><code class="bg-white px-1 border">> 引用文字</code></td><td class="py-1">引用一段话</td></tr>
+                            <tr><td class="pr-4 py-1"><code class="bg-white px-1 border">`代码`</code></td><td class="py-1">行内代码</td></tr>
+                            <tr><td class="pr-4 py-1"><code class="bg-white px-1 border">---</code></td><td class="py-1">分割线</td></tr>
+                        </table>
+                    </div>
+
+                    <!-- 格式工具栏 -->
+                    <div id="toolbar" class="flex flex-wrap items-center gap-1 mb-2 bg-gray-50 border border-gray-300 rounded p-1.5">
+                        <button type="button" class="toolbar-btn" data-insert="### 标题">标题</button>
+                        <button type="button" class="toolbar-btn" data-insert="**粗体**" data-selector="粗体文字">B</button>
+                        <button type="button" class="toolbar-btn" data-insert="*斜体*" data-selector="斜体文字"><i>I</i></button>
+                        <span class="toolbar-divider"></span>
+                        <button type="button" class="toolbar-btn" data-insert="- 列表项" data-line-prefix="- ">• 列表</button>
+                        <button type="button" class="toolbar-btn" data-insert="1. 列表项" data-line-prefix="1. ">1. 列表</button>
+                        <span class="toolbar-divider"></span>
+                        <button type="button" class="toolbar-btn" data-insert="[链接文字](https://)" data-selector="链接文字">链接</button>
+                        <button type="button" class="toolbar-btn" data-insert="> 引用文字">引用</button>
+                        <button type="button" class="toolbar-btn" data-insert="`代码`" data-selector="代码">代码</button>
+                        <button type="button" class="toolbar-btn" data-insert="![图片描述](/图片地址)" data-selector="图片描述">图片</button>
+                        <button type="button" class="toolbar-btn" data-insert="---">分割线</button>
+                    </div>
+
+                    <!-- 双栏:左编辑,右预览 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <textarea id="content" name="content" rows="24"
+                                  class="w-full border border-gray-300 rounded p-3 focus:outline-none focus:border-blue-400"
+                                  placeholder="在此输入条目内容..."><%= page.raw %></textarea>
+                        <div id="preview" class="preview-area border border-gray-300 rounded p-3 bg-gray-50 overflow-y-auto"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">
+                        左侧输入,右侧实时预览。支持 Markdown,也可直接写 HTML(如信息栏表格)。
+                    </p>
                 </div>
+
                 <div class="mb-3">
                     <label for="summary" class="block font-bold mb-1">编辑说明(可选)</label>
                     <input type="text" id="summary" name="summary"
@@ -124,12 +230,126 @@
     <script>
         const form = document.getElementById('edit-form');
         const status = document.getElementById('form-status');
+        const textarea = document.getElementById('content');
+        const preview = document.getElementById('preview');
+        const cheatsheet = document.getElementById('cheatsheet');
         const originalTitle = encodeURIComponent('<%= page.title %>');
 
+        // ---- 实时预览:输入防抖后调后端渲染 ----
+        let previewTimer = null;
+        function updatePreview() {
+            const content = textarea.value;
+            clearTimeout(previewTimer);
+            previewTimer = setTimeout(async () => {
+                try {
+                    const res = await fetch('/api/preview', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content })
+                    });
+                    const data = await res.json();
+                    preview.innerHTML = data.html;
+                } catch (e) {
+                    preview.innerHTML = '<p class="text-gray-400">预览加载失败</p>';
+                }
+            }, 300);
+        }
+        textarea.addEventListener('input', updatePreview);
+
+        // ---- 语法速查折叠 ----
+        document.getElementById('cheatsheet-toggle').addEventListener('click', function () {
+            cheatsheet.classList.toggle('hidden');
+        });
+
+        // ---- 格式工具栏:在光标处插入或包裹选中的文字 ----
+        function insertText(before, after, placeholder) {
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const selected = textarea.value.slice(start, end);
+            const text = selected || placeholder || '';
+            const insertion = before + text + after;
+            textarea.value = textarea.value.slice(0, start) + insertion + textarea.value.slice(end);
+            textarea.selectionStart = start + before.length;
+            textarea.selectionEnd = start + before.length + text.length;
+            textarea.focus();
+            updatePreview();
+        }
+
+        function insertLinePrefix(prefix) {
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const lineStart = textarea.value.lastIndexOf('\n', start - 1) + 1;
+            const lineEnd = textarea.value.indexOf('\n', end);
+            const line = textarea.value.slice(lineStart, lineEnd === -1 ? textarea.value.length : lineEnd);
+            textarea.value = textarea.value.slice(0, lineStart) + prefix + line + textarea.value.slice(lineEnd === -1 ? textarea.value.length : lineEnd);
+            textarea.selectionStart = start + prefix.length;
+            textarea.selectionEnd = end + prefix.length;
+            textarea.focus();
+            updatePreview();
+        }
+
+        document.querySelectorAll('#toolbar .toolbar-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                if (btn.dataset.linePrefix) {
+                    insertLinePrefix(btn.dataset.linePrefix);
+                    return;
+                }
+                const insert = btn.dataset.insert;
+                const selector = btn.dataset.selector || '';
+                if (insert === '### 标题') {
+                    insertLinePrefix('### ');
+                } else if (insert === '> 引用文字') {
+                    insertLinePrefix('> ');
+                } else if (insert === '---') {
+                    insertText('\n\n---\n\n', '', '');
+                } else if (insert === '- 列表项') {
+                    insertLinePrefix('- ');
+                } else if (insert === '1. 列表项') {
+                    insertLinePrefix('1. ');
+                } else {
+                    // 通用:包裹类
+                    const pairs = {
+                        '**粗体**': ['**', '**'],
+                        '*斜体*': ['*', '*'],
+                        '[链接文字](https://)': ['[', '](https://)'],
+                        '![图片描述](/图片地址)': ['![', '](/图片地址)'],
+                        '`代码`': ['`', '`']
+                    };
+                    if (pairs[insert]) {
+                        insertText(pairs[insert][0], pairs[insert][1], selector);
+                    } else {
+                        // 未知:直接插入
+                        insertText(insert, '', '');
+                    }
+                }
+            });
+        });
+
+        // ---- 小屏编辑/预览切换 ----
+        const editBtn = document.getElementById('mode-edit-btn');
+        const previewBtn = document.getElementById('mode-preview-btn');
+        function setMobileMode(mode) {
+            if (mode === 'edit') {
+                textarea.classList.remove('hidden');
+                preview.classList.add('hidden');
+                editBtn.classList.add('bg-blue-600', 'text-white');
+                previewBtn.classList.remove('bg-blue-600', 'text-white');
+            } else {
+                textarea.classList.add('hidden');
+                preview.classList.remove('hidden');
+                editBtn.classList.remove('bg-blue-600', 'text-white');
+                previewBtn.classList.add('bg-blue-600', 'text-white');
+                updatePreview();
+            }
+        }
+        editBtn.addEventListener('click', function () { setMobileMode('edit'); });
+        previewBtn.addEventListener('click', function () { setMobileMode('preview'); });
+
+        // ---- 保存 ----
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
             const title = document.getElementById('title').value.trim();
-            const content = document.getElementById('content').value;
+            const content = textarea.value;
             const summary = document.getElementById('summary').value.trim();
             const author = document.getElementById('author').value.trim();
 
@@ -162,6 +382,9 @@
                 status.className = 'mt-3 text-xs text-red-600';
             }
         });
+
+        // 初始预览
+        updatePreview();
     </script>
 </body>
 </html>
