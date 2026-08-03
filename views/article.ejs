@@ -30,8 +30,7 @@
         body main { background: rgba(255, 255, 255, 0.85) !important; }
         body footer { background: rgba(255, 255, 255, 0.80) !important; }
             /* 白底延展到页面最底部,避免底部露出背景色空隙 */
-            box-shadow: 0 0 0 100vmax rgba(255, 255, 255, 0.80);
-        .wiki-serif { font-family: 'Linux Libertine', 'Georgia', 'Times', serif; }
+                    .wiki-serif { font-family: 'Linux Libertine', 'Georgia', 'Times', serif; }
         h1 {
             font-family: 'Linux Libertine', 'Georgia', 'Times', serif;
             font-size: 1.8rem;
@@ -225,7 +224,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="mt-8 py-6 bg-white border-t border-gray-300 text-xs text-gray-600">
+    <footer class="pt-8 pb-40 bg-white border-t border-gray-300 text-xs text-gray-600">
         <div class="container mx-auto px-4 text-center">
             <p class="mb-2">本页面最后修订于 <%= new Date(page.updatedAt).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) %>。</p>
             <p class="mb-4">
