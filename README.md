@@ -114,9 +114,6 @@ sudo nginx -t && sudo systemctl reload nginx
 - 服务器上服务用户对 `content/`、`data/` 需有读写权限。
 - GCP 建议:磁盘扩容、快照;后续可把这些目录放到独立磁盘。
 
-### 7. GCP 防火墙
-
-确保防火墙放行 80/443(TCP)。如果只走 Nginx,3000 端口可仅对内网开放。
 
 ## REST API
 
