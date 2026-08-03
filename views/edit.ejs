@@ -74,6 +74,13 @@
                            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-400"
                            placeholder="例如:补充角色介绍">
                 </div>
+                <div class="mb-3">
+                    <label for="author" class="block font-bold mb-1">贡献者署名(可选)</label>
+                    <input type="text" id="author" name="author"
+                           class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-400"
+                           placeholder="例如:猫天尘">
+                    <p class="text-xs text-gray-500 mt-1">将记录在本词条的最近更改中。</p>
+                </div>
                 <div class="flex gap-3">
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2 rounded">
                         保存页面
@@ -103,6 +110,7 @@
             const title = document.getElementById('title').value.trim();
             const content = document.getElementById('content').value;
             const summary = document.getElementById('summary').value.trim();
+            const author = document.getElementById('author').value.trim();
 
             if (!title) {
                 status.textContent = '标题不能为空。';
@@ -120,7 +128,7 @@
                 const res = await fetch(url, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title: title, content: content, summary: summary })
+                    body: JSON.stringify({ title: title, content: content, summary: summary, author: author })
                 });
                 if (!res.ok) {
                     const err = await res.json().catch(() => ({}));

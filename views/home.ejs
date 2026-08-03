@@ -81,8 +81,7 @@
             </form>
 
             <div class="flex items-center gap-3 text-xs sm:text-sm">
-                <a href="/wiki/%E6%96%B0%E5%BB%BA%E9%A1%B5%E9%9D%A2/edit" class="link-blue hidden sm:inline">添加页面</a>
-                <a href="#" class="link-blue hidden sm:inline">联系站长</a>
+                <a href="#" class="link-blue hidden sm:inline" onclick="contactWebmaster(event)">联系站长</a>
                 <button class="text-gray-600 hover:bg-gray-100 p-2 rounded sm:hidden">
                     <i class="fas fa-search"></i>
                 </button>
@@ -102,7 +101,6 @@
                 <h3 class="font-bold text-gray-500 border-b border-gray-200 pb-1 mb-2">全站导航</h3>
                 <ul class="space-y-1.5">
                     <li><a href="/" class="link-blue">首页</a></li>
-                    <li><a href="/categories" class="link-blue">分类索引</a></li>
                     <li><a href="/recent" class="link-blue">最近更改</a></li>
                     <li><a href="/random" class="link-blue">随机条目</a></li>
                 </ul>
@@ -112,17 +110,6 @@
                 <ul class="space-y-1.5">
                     <li><a href="/wiki/%E6%96%B0%E5%BB%BA%E9%A1%B5%E9%9D%A2/edit" class="link-blue">添加页面</a></li>
                     <li><a href="/recent" class="link-blue">最近更改</a></li>
-                </ul>
-            </div>
-            <div>
-                <h3 class="font-bold text-gray-500 border-b border-gray-200 pb-1 mb-2">其他语言</h3>
-                <ul class="space-y-1.5">
-                    <li><a href="#" class="link-blue">English</a></li>
-                    <li><a href="#" class="link-blue">Deutsch</a></li>
-                    <li><a href="#" class="link-blue">Français</a></li>
-                    <li><a href="#" class="link-blue">日本語</a></li>
-                    <li><a href="#" class="link-blue">Español</a></li>
-                    <li class="text-right text-gray-500 text-xs mt-1"><a href="#" class="link-blue">更多...</a></li>
                 </ul>
             </div>
         </aside>
@@ -189,6 +176,7 @@
                             <li>
                                 <a href="/wiki/<%= encodeURIComponent(e.title) %>" class="link-blue font-bold"><%= e.title %></a>
                                 <% if (e.summary) { %> <span class="text-gray-500">(<%= e.summary %>)</span> <% } %>
+                                <% if (e.author) { %> <span class="text-gray-400 text-xs">by <%= e.author %></span> <% } %>
                             </li>
                             <% }) %>
                             <% if (!recent.length) { %>
@@ -199,21 +187,6 @@
                             <a href="/recent" class="link-blue mr-2">更多...</a>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Categories -->
-            <div class="mt-6 border border-gray-300 bg-gray-50 p-4 rounded-sm">
-                <h3 class="text-center font-bold text-gray-600 mb-4 border-b pb-2">分类索引</h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                    <a href="/categories" class="block p-2 hover:bg-white rounded transition"><i class="fas fa-flask text-blue-500 mb-1"></i><br>自然科学</a>
-                    <a href="/categories" class="block p-2 hover:bg-white rounded transition"><i class="fas fa-users text-green-500 mb-1"></i><br>社会科学</a>
-                    <a href="/categories" class="block p-2 hover:bg-white rounded transition"><i class="fas fa-laptop-code text-gray-700 mb-1"></i><br>技术应用</a>
-                    <a href="/categories" class="block p-2 hover:bg-white rounded transition"><i class="fas fa-palette text-purple-500 mb-1"></i><br>文化艺术</a>
-                    <a href="/categories" class="block p-2 hover:bg-white rounded transition"><i class="fas fa-globe-asia text-blue-400 mb-1"></i><br>地理</a>
-                    <a href="/categories" class="block p-2 hover:bg-white rounded transition"><i class="fas fa-landmark text-yellow-600 mb-1"></i><br>历史</a>
-                    <a href="/categories" class="block p-2 hover:bg-white rounded transition"><i class="fas fa-user-tie text-red-500 mb-1"></i><br>人物传记</a>
-                    <a href="/categories" class="block p-2 hover:bg-white rounded transition"><i class="fas fa-plus-circle text-gray-400 mb-1"></i><br>更多分类</a>
                 </div>
             </div>
 
@@ -256,6 +229,12 @@
             }
         }
         menuBtn.addEventListener('click', toggleMobileMenu);
+
+        // 联系站长:弹出邮箱
+        function contactWebmaster(e) {
+            e.preventDefault();
+            window.prompt('站长邮箱:', 'wuzhidizhemaotianchen@gmail.com');
+        }
     </script>
 </body>
 </html>

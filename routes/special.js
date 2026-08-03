@@ -21,6 +21,7 @@ router.get('/recent', (req, res) => {
     items: history.list().map((e) => ({
       title: e.title,
       sub: e.summary || e.type,
+      author: e.author || '',
       time: e.time,
     })),
     emptyText: '还没有任何编辑记录',

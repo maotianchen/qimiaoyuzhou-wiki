@@ -41,6 +41,9 @@
                             <% if (item.sub) { %>
                             <span class="text-gray-500 text-xs">(<%= item.sub %>)</span>
                             <% } %>
+                            <% if (item.author) { %>
+                            <span class="text-gray-400 text-xs">by <%= item.author %></span>
+                            <% } %>
                         </div>
                         <% if (item.time) { %>
                         <span class="text-gray-400 text-xs whitespace-nowrap">

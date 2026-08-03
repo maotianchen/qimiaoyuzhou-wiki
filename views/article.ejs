@@ -109,8 +109,7 @@
                 </div>
             </form>
             <div class="flex items-center gap-3 text-xs sm:text-sm">
-                <a href="/wiki/<%= encodeURIComponent(page.title) %>/edit" class="link-blue hidden sm:inline">编辑</a>
-                <a href="/wiki/%E6%96%B0%E5%BB%BA%E9%A1%B5%E9%9D%A2/edit" class="link-blue hidden sm:inline">添加页面</a>
+                <a href="#" class="link-blue hidden sm:inline" onclick="contactWebmaster(event)">联系站长</a>
                 <button class="text-gray-600 hover:bg-gray-100 p-2 rounded sm:hidden"><i class="fas fa-search"></i></button>
                 <button class="text-gray-600 hover:bg-gray-100 p-2 rounded sm:hidden"><i class="fas fa-user"></i></button>
             </div>
@@ -126,7 +125,6 @@
                 <h3 class="font-bold text-gray-500 border-b border-gray-200 pb-1 mb-2">全站导航</h3>
                 <ul class="space-y-1.5">
                     <li><a href="/" class="link-blue">首页</a></li>
-                    <li><a href="/categories" class="link-blue">分类索引</a></li>
                     <li><a href="/recent" class="link-blue">最近更改</a></li>
                     <li><a href="/random" class="link-blue">随机条目</a></li>
                 </ul>
@@ -241,6 +239,12 @@
             }
         }
         menuBtn.addEventListener('click', toggleMobileMenu);
+
+        // 联系站长:弹出邮箱
+        function contactWebmaster(e) {
+            e.preventDefault();
+            window.prompt('站长邮箱:', 'wuzhidizhemaotianchen@gmail.com');
+        }
 
         // TOC 展开/隐藏
         document.querySelectorAll('.toc-toggle').forEach(function (el) {

@@ -20,10 +20,10 @@ router.get('/pages/:title', (req, res) => {
 
 // ---- 新建条目 ----
 router.post('/pages', (req, res) => {
-  const { title, content, summary } = req.body || {};
+  const { title, content, summary, author } = req.body || {};
   try {
     const page = storage.writePage(title, content);
-    history.addEntry({ title: page.title, type: 'create', summary });
+    history.addEntry({ title: page.title, type: 'create', summary, author });
     res.status(201).json(page);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -32,12 +32,12 @@ router.post('/pages', (req, res) => {
 
 // ---- 更新条目(支持标题重命名:body.title 为新标题) ----
 router.put('/pages/:title', (req, res) => {
-  const { content, title, summary } = req.body || {};
+  const { content, title, summary, author } = req.body || {};
   try {
     const page = storage.writePage(title || req.params.title, content, {
       originalTitle: req.params.title,
     });
-    history.addEntry({ title: page.title, type: 'edit', summary });
+    history.addEntry({ title: page.title, type: 'edit', summary, author });
     res.json(page);
   } catch (err) {
     res.status(400).json({ error: err.message });
