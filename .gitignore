@@ -1,0 +1,23 @@
+# 依赖与构建
+node_modules/
+npm-debug.log*
+
+# 本地工具配置(Claude Code 等,含本机路径与授权记录)
+.claude/
+
+# 环境变量(含密钥,勿提交)
+.env
+.env.*
+!.env.example
+
+# 运行时数据
+content/media/uploaded/
+data/*.json
+!data/.gitkeep
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/

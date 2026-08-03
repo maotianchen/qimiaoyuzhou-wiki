@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奇喵宇宙维基 - 首页</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" href="logo.png">
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f6f6f6;
+        }
+        .wiki-serif {
+            font-family: 'Linux Libertine', 'Georgia', 'Times', serif;
+        }
+        .wiki-border {
+            border: 1px solid #a7d7f9;
+        }
+        .wiki-bg-header {
+            background-color: #cedff2;
+            background-image: linear-gradient(to bottom, #f5faff 0%, #cedff2 100%);
+        }
+        .wiki-box {
+            border: 1px solid #a2a9b1;
+            background-color: #fff;
+        }
+        .wiki-box-header {
+            background-color: #f8f9fa; /* Classic light gray header */
+            border-bottom: 1px solid #a2a9b1;
+            padding: 0.5rem 1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        .link-blue {
+            color: #3366cc;
+            text-decoration: none;
+        }
+        .link-blue:hover {
+            text-decoration: underline;
+        }
+        .link-red {
+            color: #ba0000;
+        }
+        /* Mobile menu transition */
+        #mobile-sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="text-gray-800 text-sm leading-6">
+
+    <!-- Top Navigation Bar -->
+    <nav class="bg-white border-b border-gray-300 sticky top-0 z-50 h-14">
+        <div class="container mx-auto px-4 h-full flex items-center justify-between">
+            
+            <!-- Mobile Menu Button & Logo -->
+            <div class="flex items-center gap-4">
+                <button id="menu-btn" class="md:hidden text-gray-600 hover:bg-gray-100 p-2 rounded">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                
+                <!-- LOGO PLACEHOLDER -->
+                <a href="#" class="flex items-center gap-2 group">
+                    <div class="w-10 h-10 rounded-full border border-gray-300 overflow-hidden">
+                        <img src="logo.png" alt="https://www.qimiaoyuzhou.com" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="wiki-serif text-lg font-bold leading-none mt-1">奇喵宇宙维基</span>
+                        <span class="text-xs text-gray-500">奇喵圈的百科全书</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="hidden sm:flex flex-1 max-w-lg mx-4">
+                <div class="relative w-full">
+                    <input type="text" placeholder="搜索" class="w-full border border-gray-300 rounded px-3 py-1.5 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors">
+                    <button class="absolute right-0 top-0 h-full px-3 text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- User Tools -->
+            <div class="flex items-center gap-3 text-xs sm:text-sm">
+                <a href="#" class="link-blue hidden sm:inline">添加页面</a>
+                <a href="#" class="link-blue hidden sm:inline">联系站长</a>
+                <button class="text-gray-600 hover:bg-gray-100 p-2 rounded sm:hidden">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="text-gray-600 hover:bg-gray-100 p-2 rounded sm:hidden">
+                    <i class="fas fa-user"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-0 md:px-4 py-4 flex flex-col md:flex-row gap-6 relative">
+
+        <!-- Sidebar Navigation (Desktop: Left Col, Mobile: Hidden/Slide) -->
+        <aside id="sidebar" class="hidden md:block w-44 flex-shrink-0 space-y-6 text-xs">
+            
+            <!-- Section 1 -->
+            <div class="bg-gray-50 p-2 rounded border border-gray-200 md:border-0 md:bg-transparent md:p-0">
+                <h3 class="font-bold text-gray-500 border-b border-gray-200 pb-1 mb-2">全站导航</h3>
+                <ul class="space-y-1.5">
+                    <li><a href="#" class="link-blue">首页</a></li>
+                    <li><a href="#" class="link-blue">分类索引</a></li>
+                    <li><a href="#" class="link-blue">特色内容</a></li>
+                    <li><a href="#" class="link-blue">新闻动态</a></li>
+                    <li><a href="#" class="link-blue">最近更改</a></li>
+                    <li><a href="#" class="link-blue">随机条目</a></li>
+                </ul>
+            </div>
+
+            <!-- Section 2 -->
+            <div>
+                <h3 class="font-bold text-gray-500 border-b border-gray-200 pb-1 mb-2">帮助</h3>
+                <ul class="space-y-1.5">
+                    <li><a href="#" class="link-blue">帮助</a></li>
+                    <li><a href="#" class="link-blue">维基社群</a></li>
+                    <li><a href="#" class="link-blue">方针与指引</a></li>
+                    <li><a href="#" class="link-blue">互助客栈</a></li>
+                    <li><a href="#" class="link-blue">知识问答</a></li>
+                    <li><a href="#" class="link-blue">字词转换</a></li>
+                </ul>
+            </div>
+
+            <!-- Section 3 -->
+            <div>
+                <h3 class="font-bold text-gray-500 border-b border-gray-200 pb-1 mb-2">工具</h3>
+                <ul class="space-y-1.5">
+                    <li><a href="#" class="link-blue">链入页面</a></li>
+                    <li><a href="#" class="link-blue">上传文件</a></li>
+                    <li><a href="#" class="link-blue">特殊页面</a></li>
+                    <li><a href="#" class="link-blue">打印/导出</a></li>
+                </ul>
+            </div>
+
+            <!-- Section 4 -->
+            <div>
+                <h3 class="font-bold text-gray-500 border-b border-gray-200 pb-1 mb-2">其他语言</h3>
+                <ul class="space-y-1.5">
+                    <li><a href="#" class="link-blue">English</a></li>
+                    <li><a href="#" class="link-blue">Deutsch</a></li>
+                    <li><a href="#" class="link-blue">Français</a></li>
+                    <li><a href="#" class="link-blue">日本語</a></li>
+                    <li><a href="#" class="link-blue">Español</a></li>
+                    <li class="text-right text-gray-500 text-xs mt-1"><a href="#" class="link-blue">更多...</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Mobile Sidebar Drawer (Overlay) -->
+        <div id="mobile-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden" onclick="toggleMobileMenu()"></div>
+        <div id="mobile-sidebar" class="fixed inset-y-0 left-0 w-64 bg-white z-50 transform -translate-x-full md:hidden overflow-y-auto p-4 shadow-lg">
+             <!-- Cloned Sidebar Content for Mobile would go here via JS or duplicate HTML. Using simple list for demo -->
+             <div class="flex justify-between items-center mb-4">
+                 <span class="font-bold text-lg wiki-serif">导航</span>
+                 <button onclick="toggleMobileMenu()" class="text-gray-500"><i class="fas fa-times"></i></button>
+             </div>
+             <ul class="space-y-4 text-sm">
+                <li><a href="#" class="block p-2 bg-gray-100 rounded">首页</a></li>
+                <li><a href="#" class="block p-2 hover:bg-gray-50">随机条目</a></li>
+                <li><a href="#" class="block p-2 hover:bg-gray-50">最近更改</a></li>
+                <li><a href="#" class="block p-2 hover:bg-gray-50">附近的条目</a></li>
+                <li class="border-t pt-2 mt-2 font-bold text-gray-500">用户</li>
+                <li><a href="#" class="block p-2 hover:bg-gray-50">登录</a></li>
+             </ul>
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 min-w-0 bg-white md:border md:border-gray-300 p-0 md:p-6 shadow-sm">
+            
+            <!-- Page Header / Welcome Banner -->
+            <div class="bg-green-50 border border-green-200 p-4 mb-6 text-center rounded-sm">
+                <h1 class="wiki-serif text-2xl md:text-3xl mb-1">欢迎来到奇喵宇宙</h1>
+                <div class="text-sm text-gray-500">
+                    人人可编辑的自由百科全书<br>
+                    现有 <span class="font-bold text-black">1</span> 篇条目
+                </div>
+            </div>
+
+            <!-- Top Grid: Featured & News -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+                
+                <!-- Left: Featured Article -->
+                <div class="wiki-box rounded-sm flex flex-col h-full">
+                    <div class="wiki-box-header bg-blue-50 border-blue-200">
+                        <i class="fas fa-star text-yellow-500 mr-2"></i> 特色条目
+                    </div>
+                    <div class="p-4 flex flex-col md:flex-row gap-4 h-full">
+                        <!-- Image Placeholder -->
+                        <div class="flex-shrink-0 w-full md:w-40 h-40 bg-gray-200 flex items-center justify-center text-gray-400 border border-gray-300">
+                            <span class="text-xs">
+                                <img src="5243fbf2b2119313b07ecf3322601bd7912396dd27a2.webp">
+                            </span>
+                        </div>
+                        <div class="flex-1">
+                            <h2 class="font-bold text-lg mb-2"><a href="#" class="link-blue">猫小九历险记</a></h2>
+                            <p class="text-justify mb-2">
+                                作为土猫部落里的小土猫，猫小九一直被人欺负和嘲笑，只是这一切，从一颗神秘的石珠开始改变了……
+                                <br>
+                                跟着猫小九和他的朋友们一路披荆斩棘、击败对手，直到成为猫族最强战神吧。 
+                            </p>
+                            <div class="text-right mt-auto">
+                                <a href="https://www.qimiaoyuzhou.wiki/mxj" class="link-blue text-xs font-bold">(阅读全文...)</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: In the News -->
+                <div class="wiki-box rounded-sm flex flex-col h-full">
+                    <div class="wiki-box-header bg-blue-50 border-blue-200">
+                        <i class="fas fa-newspaper text-blue-500 mr-2"></i> 新闻动态
+                    </div>
+                    <div class="p-4 flex flex-col h-full">
+                        <div class="flex gap-4 mb-3">
+                             <!-- Image Placeholder -->
+                             <div class="hidden sm:block w-24 h-24 bg-gray-200 flex-shrink-0 flex items-center justify-center text-gray-400 border border-gray-300">
+                                <span class="text-xs">新闻图</span>
+                            </div>
+                            <ul class="list-disc list-inside space-y-2 flex-1">
+                                <li>
+                                    <a href="#" class="link-blue font-bold"> </a> 
+                                </li>
+                                <li>
+                                    <a href="#" class="link-blue font-bold"> </a> 
+                                </li>
+                                <li>
+                                     <a href="#" class="link-blue"> </a> 
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mt-auto text-right border-t pt-2 text-xs">
+                             <a href="#" class="link-blue mr-2">候选</a>
+                             <a href="#" class="link-blue mr-2">新闻</a>
+                             <a href="#" class="link-blue">更多...</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle Grid: Did You Know & On This Day -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                
+                <!-- Did You Know -->
+                <div class="wiki-box rounded-sm">
+                    <div class="wiki-box-header bg-green-50 border-green-200">
+                        <i class="fas fa-question-circle text-green-600 mr-2"></i> 你知道吗
+                    </div>
+                    <div class="p-4 flex gap-4">
+                        <div class="flex-1">
+                            <ul class="list-disc list-inside space-y-2">
+                                <li><a href="#" class="link-blue font-bold"> </a> </li>
+                                <li><a href="#" class="link-blue font-bold"> </a> </li>
+                                <li> <a href="#" class="link-blue font-bold"> </a> </li>
+                                <li><a href="#" class="link-blue font-bold"> </a> </li>
+                            </ul>
+                            <div class="text-right mt-2 text-xs">
+                                <a href="#" class="link-blue font-bold">存档</a> &bull; <a href="#" class="link-blue font-bold">编写新条目</a>
+                            </div>
+                        </div>
+                         <!-- Image Placeholder -->
+                         <div class="w-24 h-32 bg-gray-200 hidden sm:flex items-center justify-center text-gray-400 border border-gray-300 flex-shrink-0">
+                            <span class="text-xs text-center p-1">推荐<br>图片</span>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Categories / Portals -->
+            <div class="mt-6 border border-gray-300 bg-gray-50 p-4 rounded-sm">
+                <h3 class="text-center font-bold text-gray-600 mb-4 border-b pb-2">分类索引</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <a href="#" class="block p-2 hover:bg-white rounded transition"><i class="fas fa-flask text-blue-500 mb-1"></i><br>自然科学</a>
+                    <a href="#" class="block p-2 hover:bg-white rounded transition"><i class="fas fa-users text-green-500 mb-1"></i><br>社会科学</a>
+                    <a href="#" class="block p-2 hover:bg-white rounded transition"><i class="fas fa-laptop-code text-gray-700 mb-1"></i><br>技术应用</a>
+                    <a href="#" class="block p-2 hover:bg-white rounded transition"><i class="fas fa-palette text-purple-500 mb-1"></i><br>文化艺术</a>
+                    <a href="#" class="block p-2 hover:bg-white rounded transition"><i class="fas fa-globe-asia text-blue-400 mb-1"></i><br>地理</a>
+                    <a href="#" class="block p-2 hover:bg-white rounded transition"><i class="fas fa-landmark text-yellow-600 mb-1"></i><br>历史</a>
+                    <a href="#" class="block p-2 hover:bg-white rounded transition"><i class="fas fa-user-tie text-red-500 mb-1"></i><br>人物传记</a>
+                    <a href="#" class="block p-2 hover:bg-white rounded transition"><i class="fas fa-plus-circle text-gray-400 mb-1"></i><br>更多分类</a>
+                </div>
+            </div>
+
+            <!-- Sister Projects (Placeholder) -->
+            <div class="mt-6">
+                <div class="wiki-box-header bg-gray-100 border border-b-0 border-gray-300">
+                    <span class="font-normal">奇喵宇宙维基百科由<a href="#" class="link-blue">武之帝者猫天尘</a>和<a href="#" class="link-blue">鱼航员分析协会</a>运作。奇喵圈其他网站：</span>
+                </div>
+                <div class="border border-gray-300 bg-white p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-xs text-center">
+                    <div class="flex flex-col items-center gap-1"><div class="w-8 h-8 bg-gray-200 rounded-full"></div><span>官方网站</span></div>
+                    <div class="flex flex-col items-center gap-1"><div class="w-8 h-8 bg-gray-200 rounded-full"></div><span>浴火鱼航团</span></div>
+                    <div class="flex flex-col items-center gap-1"><div class="w-8 h-8 bg-gray-200 rounded-full"></div><span>鱼航员分析协会</span></div>
+                    <div class="flex flex-col items-center gap-1"><div class="w-8 h-8 bg-gray-200 rounded-full"></div><span>qimiaoyvzhou.com</span></div>
+                    <div class="flex flex-col items-center gap-1"><div class="w-8 h-8 bg-gray-200 rounded-full"></div><span>浴火工作室</span></div>
+                    <div class="flex flex-col items-center gap-1"><div class="w-8 h-8 bg-gray-200 rounded-full"></div><span>maobailing.com</span></div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-8 py-6 bg-white border-t border-gray-300 text-xs text-gray-600">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-2">本页面最后修订于 2023年11月28日 (星期四) 12:00。</p>
+            <p class="mb-4">
+                本站的全部文字在<a href="#" class="link-blue">知识共享 署名-相同方式共享 4.0协议</a>之条款下提供，附加条款亦可能应用。<br>
+                奇喵宇宙®和奇喵宇宙标志是<a href="#" class="link-blue">湖南崇鳞网络科技有限公司</a>的注册商标；奇喵君故事™是商标。<br>
+                奇喵宇宙维基基金会是按棍母税收法501(c)(3)登记的<a href="#" class="link-blue">非营利慈善机构</a>。
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#" class="link-blue">隐私政策</a>
+                <a href="#" class="link-blue">关于奇喵宇宙维基百科</a>
+                <a href="#" class="link-blue">免责声明</a>
+                <a href="#" class="link-blue">联系我们</a>
+                <a href="#" class="link-blue">手机版视图</a>
+                <a href="#" class="link-blue">开发者</a>
+                <a href="#" class="link-blue">统计</a>
+                <a href="#" class="link-blue">Cookie声明</a>
+            </div>
+            <div class="mt-6 flex justify-center gap-4">
+                 <!-- Button Placeholders -->
+                 <div class="h-8 w-24 bg-gray-200 border border-gray-300"></div>
+                 <div class="h-8 w-24 bg-gray-200 border border-gray-300"></div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple Logic for Mobile Menu
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileSidebar = document.getElementById('mobile-sidebar');
+        const overlay = document.getElementById('mobile-overlay');
+
+        function toggleMobileMenu() {
+            const isHidden = mobileSidebar.classList.contains('-translate-x-full');
+            if (isHidden) {
+                mobileSidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                mobileSidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        menuBtn.addEventListener('click', toggleMobileMenu);
+
+        // Set dynamic date
+        const dateEl = document.getElementById('current-date');
+        const now = new Date();
+        const month = now.getMonth() + 1;
+        const day = now.getDate();
+        dateEl.innerText = `${month}月${day}日：`;
+
+    </script>
+</body>
+</html>

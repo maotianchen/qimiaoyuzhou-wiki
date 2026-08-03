@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索结果 - 奇喵宇宙维基</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/logo.png">
+    <style>
+        body { font-family: sans-serif; background-color: #f6f6f6; }
+        .wiki-serif { font-family: 'Linux Libertine', 'Georgia', 'Times', serif; }
+        .link-blue { color: #0645ad; text-decoration: none; }
+        .link-blue:hover { text-decoration: underline; }
+    </style>
+</head>
+<body class="text-gray-800 text-sm leading-6">
+
+    <nav class="bg-white border-b border-gray-300 sticky top-0 z-50 h-14">
+        <div class="container mx-auto px-4 h-full flex items-center">
+            <a href="/" class="flex items-center gap-2 group">
+                <div class="w-10 h-10 rounded-full border border-gray-300 overflow-hidden">
+                    <img src="/logo.png" alt="奇喵宇宙" class="w-full h-full object-cover">
+                </div>
+                <span class="wiki-serif text-lg font-bold leading-none">奇喵宇宙维基</span>
+            </a>
+            <form class="flex-1 max-w-lg mx-4" action="/search" method="get">
+                <div class="relative w-full">
+                    <input type="text" name="q" value="<%= q %>" placeholder="搜索"
+                           class="w-full border border-gray-300 rounded px-3 py-1.5 focus:outline-none focus:border-blue-400">
+                    <button type="submit" class="absolute right-0 top-0 h-full px-3 text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 max-w-4xl">
+        <main class="bg-white border border-gray-300 p-4 md:p-6 shadow-sm">
+            <h1 class="wiki-serif text-2xl border-b border-gray-300 pb-1 mb-4">搜索:&lt;<%= q %>&gt;</h1>
+
+            <% if (!q) { %>
+                <p class="text-gray-500">请输入搜索关键词。</p>
+            <% } else if (!results.length) { %>
+                <p class="text-gray-500">没有找到与「<%= q %>」相关的条目。</p>
+            <% } else { %>
+                <ul class="space-y-4">
+                    <% results.forEach(function(r) { %>
+                    <li>
+                        <a href="/wiki/<%= encodeURIComponent(r.title) %>" class="link-blue font-bold"><%= r.title %></a>
+                        <span class="text-xs text-gray-400 ml-2">
+                            <% if (r.match === 'title') { %>标题匹配<% } else { %>正文匹配<% } %>
+                        </span>
+                        <% if (r.summary) { %>
+                        <p class="text-gray-600 mt-1"><%= r.summary %></p>
+                        <% } %>
+                    </li>
+                    <% }) %>
+                </ul>
+            <% } %>
+        </main>
+    </div>
+
+    <footer class="mt-8 py-6 bg-white border-t border-gray-300 text-xs text-gray-600">
+        <div class="container mx-auto px-4 text-center">
+            <p>奇喵宇宙维基</p>
+        </div>
+    </footer>
+</body>
+</html>

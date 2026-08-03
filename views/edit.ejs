@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑 <%= page.title %> - 奇喵宇宙维基</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" href="/logo.png">
+    <style>
+        body { font-family: sans-serif; background-color: #f6f6f6; }
+        .wiki-serif { font-family: 'Linux Libertine', 'Georgia', 'Times', serif; }
+        .link-blue { color: #0645ad; text-decoration: none; }
+        .link-blue:hover { text-decoration: underline; }
+        .editor textarea {
+            font-family: ui-monospace, Menlo, monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body class="text-gray-800 text-sm leading-6">
+
+    <nav class="bg-white border-b border-gray-300 sticky top-0 z-50 h-14">
+        <div class="container mx-auto px-4 h-full flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <button id="menu-btn" class="md:hidden text-gray-600 hover:bg-gray-100 p-2 rounded">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <a href="/" class="flex items-center gap-2 group">
+                    <div class="w-10 h-10 rounded-full border border-gray-300 overflow-hidden">
+                        <img src="/logo.png" alt="奇喵宇宙" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="wiki-serif text-lg font-bold leading-none mt-1">奇喵宇宙维基</span>
+                        <span class="text-xs text-gray-500">奇喵圈的百科全书</span>
+                    </div>
+                </a>
+            </div>
+            <div class="flex items-center gap-3 text-xs sm:text-sm">
+                <a href="/wiki/<%= encodeURIComponent(page.title) %>" class="link-blue hidden sm:inline">查看页面</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 max-w-4xl">
+        <main class="bg-white border border-gray-300 p-4 md:p-6 shadow-sm">
+            <div class="flex items-baseline justify-between border-b border-gray-300 mb-4 pb-1">
+                <h1 class="wiki-serif text-2xl mb-0 pb-0">编辑「<%= page.title %>」</h1>
+            </div>
+
+            <p class="text-xs text-gray-500 mb-4">
+                支持 Markdown 语法:<code class="bg-gray-100 px-1">## 二级标题</code>、
+                <code class="bg-gray-100 px-1">**粗体**</code>、
+                <code class="bg-gray-100 px-1">[链接](https://...)</code>。也可嵌入 HTML(如信息栏表格)。
+            </p>
+
+            <form id="edit-form" class="editor">
+                <div class="mb-3">
+                    <label for="title" class="block font-bold mb-1">页面标题</label>
+                    <input type="text" id="title" name="title" value="<%= page.title %>"
+                           class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-400"
+                           placeholder="输入标题">
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="block font-bold mb-1">正文(Markdown)</label>
+                    <textarea id="content" name="content" rows="24"
+                              class="w-full border border-gray-300 rounded p-3 focus:outline-none focus:border-blue-400"
+                              placeholder="在此输入条目内容..."><%= page.raw %></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="summary" class="block font-bold mb-1">编辑说明(可选)</label>
+                    <input type="text" id="summary" name="summary"
+                           class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-400"
+                           placeholder="例如:补充角色介绍">
+                </div>
+                <div class="flex gap-3">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2 rounded">
+                        保存页面
+                    </button>
+                    <a href="/wiki/<%= encodeURIComponent(page.title) %>" class="border border-gray-300 px-5 py-2 rounded hover:bg-gray-50">
+                        取消
+                    </a>
+                </div>
+                <div id="form-status" class="mt-3 text-xs"></div>
+            </form>
+        </main>
+    </div>
+
+    <footer class="mt-8 py-6 bg-white border-t border-gray-300 text-xs text-gray-600">
+        <div class="container mx-auto px-4 text-center">
+            <p>本站的全部文字在知识共享 署名-相同方式共享 4.0协议之条款下提供。</p>
+        </div>
+    </footer>
+
+    <script>
+        const form = document.getElementById('edit-form');
+        const status = document.getElementById('form-status');
+        const originalTitle = encodeURIComponent('<%= page.title %>');
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const title = document.getElementById('title').value.trim();
+            const content = document.getElementById('content').value;
+            const summary = document.getElementById('summary').value.trim();
+
+            if (!title) {
+                status.textContent = '标题不能为空。';
+                status.className = 'mt-3 text-xs text-red-600';
+                return;
+            }
+            if (!content.trim()) {
+                status.textContent = '正文不能为空。';
+                status.className = 'mt-3 text-xs text-red-600';
+                return;
+            }
+
+            try {
+                const url = '/api/pages/' + originalTitle;
+                const res = await fetch(url, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title: title, content: content, summary: summary })
+                });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.error || '保存失败');
+                }
+                const page = await res.json();
+                window.location.href = '/wiki/' + encodeURIComponent(page.title);
+            } catch (err) {
+                status.textContent = '保存失败:' + err.message;
+                status.className = 'mt-3 text-xs text-red-600';
+            }
+        });
+    </script>
+</body>
+</html>

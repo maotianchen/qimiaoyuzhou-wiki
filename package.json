@@ -1,0 +1,19 @@
+{
+  "name": "qimiaoyuzhou-wiki",
+  "version": "0.1.0",
+  "description": "奇喵宇宙维基 - 类维基百科网站后端",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "gray-matter": "^4.0.3",
+    "markdown-it": "^14.1.0"
+  }
+}
