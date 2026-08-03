@@ -10,7 +10,7 @@
     <style>
         body {
             font-family: sans-serif;
-            background-color: #f6f6f6;
+            background-color: #ffffff;
             background-image: url('/beijingban.png');
             background-size: cover;
             background-attachment: fixed;
@@ -22,7 +22,7 @@
             content: '';
             position: fixed;
             inset: 0;
-            background: rgba(255, 255, 255, 0.60);
+            background: rgba(255, 255, 255, 0.40);
             z-index: 0;
             pointer-events: none;
         }
@@ -39,6 +39,8 @@
         }
         body footer {
             background: rgba(255, 255, 255, 0.80) !important;
+            /* 白底延展到页面最底部,避免底部露出背景色空隙 */
+            box-shadow: 0 0 0 100vmax rgba(255, 255, 255, 0.80);
         }
         body main .wiki-box {
             background-color: rgba(255, 255, 255, 0.75) !important;

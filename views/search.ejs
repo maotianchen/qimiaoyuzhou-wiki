@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="/logo.png">
     <style>
-        body { font-family: sans-serif; background-color: #f6f6f6;
+        body { font-family: sans-serif; background-color: #ffffff;
             background-image: url('/beijingban.png');
             background-size: cover;
             background-attachment: fixed;
@@ -17,7 +17,7 @@
             content: '';
             position: fixed;
             inset: 0;
-            background: rgba(255, 255, 255, 0.60);
+            background: rgba(255, 255, 255, 0.40);
             z-index: 0;
             pointer-events: none;
         }
@@ -28,6 +28,8 @@
         body nav { background: rgba(255, 255, 255, 0.80) !important; }
         body main { background: rgba(255, 255, 255, 0.85) !important; }
         body footer { background: rgba(255, 255, 255, 0.80) !important; }
+            /* 白底延展到页面最底部,避免底部露出背景色空隙 */
+            box-shadow: 0 0 0 100vmax rgba(255, 255, 255, 0.80);
         .wiki-serif { font-family: 'Linux Libertine', 'Georgia', 'Times', serif; }
         .link-blue { color: #0645ad; text-decoration: none; }
         .link-blue:hover { text-decoration: underline; }
