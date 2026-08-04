@@ -137,7 +137,58 @@
                         <button type="button" class="toolbar-btn" data-insert="> 引用文字">引用</button>
                         <button type="button" class="toolbar-btn" data-insert="`代码`" data-selector="代码">代码</button>
                         <button type="button" class="toolbar-btn" data-insert="![图片描述](/图片地址)" data-selector="图片描述">图片</button>
+                        <button type="button" class="toolbar-btn" data-action="insert-table">表格</button>
+                        <button type="button" class="toolbar-btn" data-action="insert-infobox">信息框</button>
                         <button type="button" class="toolbar-btn" data-insert="---">分割线</button>
+                    </div>
+
+                    <!-- 表格设置弹窗 -->
+                    <div id="insert-table-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+                        <div class="absolute inset-0 bg-black bg-opacity-40" onclick="toggleModal('insert-table-modal', false)"></div>
+                        <div class="relative bg-white rounded-lg shadow-xl p-5 w-80 max-w-full mx-4">
+                            <h3 class="font-bold text-base mb-3">插入表格</h3>
+                            <div class="mb-3">
+                                <label class="block font-bold mb-1 text-sm">行数(不含表头)</label>
+                                <input type="number" id="table-rows" value="3" min="1" max="20" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-400">
+                            </div>
+                            <div class="mb-3">
+                                <label class="block font-bold mb-1 text-sm">列数</label>
+                                <input type="number" id="table-cols" value="4" min="1" max="10" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-400">
+                            </div>
+                            <div class="mb-3">
+                                <label class="block font-bold mb-1 text-sm">表头(用逗号分隔,如:书名,作者,年份)</label>
+                                <input type="text" id="table-headers" placeholder="书名,作者,年份" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-400">
+                            </div>
+                            <div class="flex gap-2 justify-end">
+                                <button type="button" class="border border-gray-300 px-4 py-2 rounded text-sm" onclick="toggleModal('insert-table-modal', false)">取消</button>
+                                <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded text-sm" id="table-insert-btn">插入</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 信息框弹窗 -->
+                    <div id="insert-infobox-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+                        <div class="absolute inset-0 bg-black bg-opacity-40" onclick="toggleModal('insert-infobox-modal', false)"></div>
+                        <div class="relative bg-white rounded-lg shadow-xl p-5 w-[26rem] max-w-full mx-4">
+                            <h3 class="font-bold text-base mb-3">插入信息框</h3>
+                            <p class="text-xs text-gray-500 mb-3">用于条目右上角的资料卡(如专辑信息)。填写下面的字段,会自动生成信息框。</p>
+                            <div class="mb-2">
+                                <label class="block font-bold mb-1 text-sm">标题</label>
+                                <input type="text" id="info-title" placeholder="如:猫小九历险记" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-400">
+                            </div>
+                            <div class="mb-2">
+                                <label class="block font-bold mb-1 text-sm">封面图地址(可留空)</label>
+                                <input type="text" id="info-image" placeholder="/图片文件名.png" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-400">
+                            </div>
+                            <div class="mb-2">
+                                <label class="block font-bold mb-1 text-sm">字段(每行一条,格式:字段名=内容)</label>
+                                <textarea id="info-fields" rows="5" placeholder="作者=奇喵君故事&#10;出版社=湖南少年儿童出版社&#10;类型=儿童文学" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-400 text-sm"></textarea>
+                            </div>
+                            <div class="flex gap-2 justify-end">
+                                <button type="button" class="border border-gray-300 px-4 py-2 rounded text-sm" onclick="toggleModal('insert-infobox-modal', false)">取消</button>
+                                <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded text-sm" id="infobox-insert-btn">插入</button>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- 双栏:左编辑,右预览 -->
@@ -247,6 +298,10 @@
 
         document.querySelectorAll('#toolbar .toolbar-btn').forEach(function (btn) {
             btn.addEventListener('click', function () {
+                if (btn.dataset.action) {
+                    toggleModal(btn.dataset.action + '-modal', true);
+                    return;
+                }
                 if (btn.dataset.linePrefix) {
                     insertLinePrefix(btn.dataset.linePrefix);
                     return;
@@ -280,6 +335,53 @@
                     }
                 }
             });
+        });
+
+        // ---- 弹窗开关 ----
+        function toggleModal(id, show) {
+            const el = document.getElementById(id);
+            if (show) el.classList.remove('hidden');
+            else el.classList.add('hidden');
+        }
+
+        // ---- 插入表格:在光标处生成 Markdown 表格 ----
+        document.getElementById('table-insert-btn').addEventListener('click', function () {
+            const rows = Math.max(1, parseInt(document.getElementById('table-rows').value, 10) || 1);
+            const cols = Math.max(1, parseInt(document.getElementById('table-cols').value, 10) || 1);
+            const headers = document.getElementById('table-headers').value.split(/[,，]/).map(s => s.trim()).filter(Boolean);
+            const headerCount = headers.length || cols;
+            const headerCells = headers.length ? headers : Array.from({ length: cols }, (_, i) => `列${i + 1}`);
+            const sep = Array(headerCount).fill('---').join(' | ');
+            const rowsMd = Array.from({ length: rows }, () => Array(headerCount).fill('　').join(' | '));
+            const table = `\n\n| ${headerCells.join(' | ')} |\n| ${sep} |\n` + rowsMd.map(r => `| ${r} |`).join('\n') + '\n\n';
+            insertText(table, '', '');
+            toggleModal('insert-table-modal', false);
+        });
+
+        // ---- 插入信息框:按表单字段生成 infobox HTML ----
+        document.getElementById('infobox-insert-btn').addEventListener('click', function () {
+            const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            const title = document.getElementById('info-title').value.trim();
+            const image = document.getElementById('info-image').value.trim();
+            const fieldsText = document.getElementById('info-fields').value;
+            const fields = fieldsText.split('\n').map(l => l.trim()).filter(Boolean);
+            const fieldRows = fields.map(line => {
+                const eq = line.indexOf('=');
+                if (eq < 0) return null;
+                const k = line.slice(0, eq).trim();
+                const v = line.slice(eq + 1).trim();
+                return k && v ? { k: esc(k), v: esc(v) } : null;
+            }).filter(Boolean);
+
+            let html = '\n\n<table class="infobox">\n';
+            if (title) html += `  <tr><th colspan="2" class="infobox-title">${esc(title)}</th></tr>\n`;
+            if (image) html += `  <tr><td colspan="2" class="infobox-image"><img src="${esc(image)}" alt="${esc(title || '图片')}"></td></tr>\n`;
+            fieldRows.forEach(({ k, v }) => {
+                html += `  <tr><th scope="row">${k}</th><td>${v}</td></tr>\n`;
+            });
+            html += '</table>\n\n';
+            insertText(html, '', '');
+            toggleModal('insert-infobox-modal', false);
         });
 
         // ---- 小屏编辑/预览切换 ----
