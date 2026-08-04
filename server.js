@@ -20,6 +20,9 @@ app.set('views', path.join(__dirname, 'views'));
 // 静态资源:public/ 下的 logo、图片等
 app.use(express.static(path.join(__dirname, 'public')));
 
+// 上传的媒体文件:content/media/ 下的图片
+app.use('/media', express.static(path.resolve(process.cwd(), process.env.CONTENT_DIR || 'content', 'media')));
+
 // 路由
 app.use('/', pagesRouter);
 app.use('/', specialRouter);

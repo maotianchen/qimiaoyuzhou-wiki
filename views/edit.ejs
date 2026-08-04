@@ -136,10 +136,39 @@
                         <button type="button" class="toolbar-btn" data-insert="[链接文字](https://)" data-selector="链接文字">链接</button>
                         <button type="button" class="toolbar-btn" data-insert="> 引用文字">引用</button>
                         <button type="button" class="toolbar-btn" data-insert="`代码`" data-selector="代码">代码</button>
-                        <button type="button" class="toolbar-btn" data-insert="![图片描述](/图片地址)" data-selector="图片描述">图片</button>
+                        <button type="button" class="toolbar-btn" data-action="insert-image">图片</button>
                         <button type="button" class="toolbar-btn" data-action="insert-table">表格</button>
                         <button type="button" class="toolbar-btn" data-action="insert-infobox">信息框</button>
                         <button type="button" class="toolbar-btn" data-insert="---">分割线</button>
+                    </div>
+
+                    <!-- 图片上传弹窗 -->
+                    <div id="insert-image-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+                        <div class="absolute inset-0 bg-black bg-opacity-40" onclick="toggleModal('insert-image-modal', false)"></div>
+                        <div class="relative bg-white rounded-lg shadow-xl p-5 w-96 max-w-full mx-4">
+                            <h3 class="font-bold text-base mb-3">插入图片</h3>
+
+                            <div id="upload-box" class="border-2 border-dashed border-gray-300 rounded p-4 text-center cursor-pointer hover:border-blue-400 mb-3" onclick="document.getElementById('image-file').click()">
+                                <p class="text-gray-500 text-sm mb-1"><i class="fas fa-cloud-upload-alt text-2xl mb-2"></i></p>
+                                <p class="text-gray-600 text-sm">点击选择图片文件上传</p>
+                                <p class="text-gray-400 text-xs mt-1">支持 jpg/png/gif/webp/svg,最大 8MB</p>
+                            </div>
+                            <input type="file" id="image-file" accept="image/*" class="hidden">
+                            <div id="upload-status" class="text-xs mb-2 hidden"></div>
+
+                            <div class="mb-2">
+                                <label class="block font-bold mb-1 text-sm">或直接粘贴图片地址</label>
+                                <input type="text" id="image-url" placeholder="/media/xxx.png 或 https://..." class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-400">
+                            </div>
+                            <div class="mb-3">
+                                <label class="block font-bold mb-1 text-sm">图片描述(可选)</label>
+                                <input type="text" id="image-alt" placeholder="图片说明文字" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-400">
+                            </div>
+                            <div class="flex gap-2 justify-end">
+                                <button type="button" class="border border-gray-300 px-4 py-2 rounded text-sm" onclick="toggleModal('insert-image-modal', false)">取消</button>
+                                <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded text-sm" id="image-insert-btn">插入图片</button>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- 表格设置弹窗 -->
@@ -343,6 +372,55 @@
             if (show) el.classList.remove('hidden');
             else el.classList.add('hidden');
         }
+
+        // ---- 插入图片:上传或粘贴 URL ----
+        const imageFileInput = document.getElementById('image-file');
+        const imageStatus = document.getElementById('upload-status');
+
+        imageFileInput.addEventListener('change', async function () {
+            const file = imageFileInput.files[0];
+            if (!file) return;
+            if (file.size > 8 * 1024 * 1024) {
+                imageStatus.textContent = '文件超过 8MB,请压缩后再上传。';
+                imageStatus.className = 'text-xs mb-2 text-red-600';
+                imageStatus.classList.remove('hidden');
+                return;
+            }
+            const fd = new FormData();
+            fd.append('image', file);
+            imageStatus.textContent = '上传中...';
+            imageStatus.className = 'text-xs mb-2 text-blue-600';
+            imageStatus.classList.remove('hidden');
+            try {
+                const res = await fetch('/api/upload', { method: 'POST', body: fd });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || '上传失败');
+                document.getElementById('image-url').value = data.url;
+                imageStatus.textContent = '上传成功,已填入地址。';
+                imageStatus.className = 'text-xs mb-2 text-green-600';
+            } catch (err) {
+                imageStatus.textContent = '上传失败:' + err.message;
+                imageStatus.className = 'text-xs mb-2 text-red-600';
+            }
+        });
+
+        document.getElementById('image-insert-btn').addEventListener('click', function () {
+            const url = document.getElementById('image-url').value.trim();
+            const alt = document.getElementById('image-alt').value.trim() || '图片';
+            if (!url) {
+                imageStatus.textContent = '请先上传图片或填写图片地址。';
+                imageStatus.className = 'text-xs mb-2 text-red-600';
+                imageStatus.classList.remove('hidden');
+                return;
+            }
+            insertText(`![${alt}](${url})`, '', '');
+            toggleModal('insert-image-modal', false);
+            // 重置
+            document.getElementById('image-url').value = '';
+            document.getElementById('image-alt').value = '';
+            imageFileInput.value = '';
+            imageStatus.classList.add('hidden');
+        });
 
         // ---- 插入表格:在光标处生成 Markdown 表格 ----
         document.getElementById('table-insert-btn').addEventListener('click', function () {

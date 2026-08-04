@@ -7,7 +7,7 @@ server {
     listen [::]:80;
     server_name qimiaoyuzhou.wiki www.qimiaoyuzhou.wiki;
 
-    # 上传大小限制(Markdown 文本,2MB 足够;如后续启用图片上传再调大)
+    # 上传大小限制(图片上传,后端限制 8MB)
     client_max_body_size 10m;
 
     location / {

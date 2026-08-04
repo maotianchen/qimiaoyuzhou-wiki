@@ -1,11 +1,55 @@
 'use strict';
 
+const path = require('path');
+const fs = require('fs');
 const express = require('express');
+const multer = require('multer');
 const storage = require('../lib/storage');
 const history = require('../lib/history');
 const { renderMarkdown } = require('../lib/render');
 
 const router = express.Router();
+
+// ---- 图片上传:保存到 CONTENT_DIR/media,返回可访问 URL ----
+const MEDIA_DIR = path.resolve(process.cwd(), process.env.CONTENT_DIR || 'content', 'media');
+fs.mkdirSync(MEDIA_DIR, { recursive: true });
+
+const ALLOWED = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+
+function randomName() {
+  return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+}
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, MEDIA_DIR),
+    filename: (req, file, cb) => {
+      const ext = path.extname(file.originalname).toLowerCase().replace(/[^.\w]/g, '');
+      cb(null, randomName() + ext);
+    },
+  }),
+  limits: { fileSize: 8 * 1024 * 1024 }, // 8MB
+  fileFilter: (req, file, cb) => {
+    if (ALLOWED.includes(file.mimetype)) cb(null, true);
+    else cb(new Error('不支持的图片格式(仅限 jpg/png/gif/webp/svg)'));
+  },
+});
+
+router.post('/upload', upload.single('image'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: '未收到文件' });
+  res.json({
+    url: `/media/${req.file.filename}`,
+    filename: req.file.filename,
+  });
+});
+
+// 上传错误处理(文件过大等)需单独捕获
+router.use((err, req, res, next) => {
+  if (err && err.message) {
+    return res.status(400).json({ error: err.message });
+  }
+  next(err);
+});
 
 // ---- 预览:把 Markdown 渲染成 HTML(与条目页一致,供编辑器实时预览) ----
 router.post('/preview', (req, res) => {

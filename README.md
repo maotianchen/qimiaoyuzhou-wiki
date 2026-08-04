@@ -139,9 +139,15 @@ sudo nginx -t && sudo systemctl reload nginx
 
 ### 6. 数据持久化与备份
 
-- 内容都在 `content/pages/*.md` 与 `data/history.json`,备份只需打包这两个目录。
-- 服务器上服务用户对 `content/`、`data/` 需有读写权限。
+- 内容都在 `content/pages/*.md` 与 `data/history.json`,上传的图片在 `content/media/`,备份打包这几个目录即可。
+- 服务器上服务用户对 `content/`、`data/` 需有读写权限(否则图片上传会失败)。
 - GCP 建议:磁盘扩容、快照;后续可把这些目录放到独立磁盘。
+
+### 6.5 图片上传说明
+
+- 编辑页工具栏点「图片」可上传(jpg/png/gif/webp/svg,最大 8MB),图片保存到 `content/media/`,通过 `/media/文件名` 访问。
+- 首次部署后确保 `content/media` 目录可写:`sudo chown -R <用户>:<用户> content`。
+- Nginx 已设 `client_max_body_size 10m`,无需改动。
 
 ### 7. 防火墙与端口
 

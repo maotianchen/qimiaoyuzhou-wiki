@@ -11,7 +11,8 @@ npm-debug.log*
 !.env.example
 
 # 运行时数据
-content/media/uploaded/
+content/media/*
+!content/media/.gitkeep
 data/*.json
 !data/.gitkeep
 
