@@ -1,0 +1,167 @@
+/* 条目内容渲染样式 —— 条目页(.mw-body)与编辑预览(.preview-area)共用,保证预览=最终效果 */
+
+.mw-body, .preview-area {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.mw-body h1, .preview-area h1,
+.mw-body h2, .preview-area h2 {
+    font-family: 'Linux Libertine', 'Georgia', 'Times', serif !important;
+    border-bottom: 1px solid #a2a9b1 !important;
+    padding-bottom: 0.2rem;
+    font-weight: normal !important;
+    width: 100%;
+}
+.mw-body h1, .preview-area h1 {
+    font-size: 1.8rem !important;
+    margin-bottom: 0.5rem;
+}
+.mw-body h2, .preview-area h2 {
+    font-size: 1.5rem !important;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+.mw-body h3, .preview-area h3 {
+    font-size: 1.2rem !important;
+    font-weight: bold;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+.mw-body h4, .preview-area h4 {
+    font-size: 1rem !important;
+    font-weight: bold;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+.mw-body p, .preview-area p {
+    margin-bottom: 0.8em;
+    line-height: 1.6;
+}
+
+.mw-body a, .preview-area a {
+    color: #0645ad;
+    text-decoration: none;
+}
+.mw-body a:hover, .preview-area a:hover {
+    text-decoration: underline;
+}
+.mw-body .link-red, .preview-area .link-red { color: #ba0000; text-decoration: none; }
+.mw-body .link-red:hover, .preview-area .link-red:hover { text-decoration: underline; }
+.mw-body .link-external, .preview-area .link-external {
+    color: #3366bb;
+    background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgdmlld0JveD0iMCAwIDEwIDEwIj48cGF0aCBkPSJNOSAzdjVIM3YtMmgxdjFoNHYtNGgtMXYtMWgyem0tMyAybC0zIDMgMSAxIDMtMyAxIDF2LTRoLTRsMSAxeiIgZmlsbD0iIzMzNjZiYiIvPjwvc3ZnPg==') no-repeat right center;
+    padding-right: 13px;
+}
+
+.mw-body ul, .preview-area ul, .mw-body ol, .preview-area ol {
+    padding-left: 1.5em;
+    margin-bottom: 0.8em;
+}
+.mw-body ul, .preview-area ul { list-style: disc; }
+.mw-body ol, .preview-area ol { list-style: decimal; }
+
+.mw-body blockquote, .preview-area blockquote {
+    border-left: 3px solid #a2a9b1;
+    padding-left: 1em;
+    color: #555;
+    margin-bottom: 0.8em;
+}
+.mw-body code, .preview-area code {
+    background: #f3f4f6;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+.mw-body pre, .preview-area pre {
+    background: #f6f8fa;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 0.8em;
+    overflow-x: auto;
+    margin-bottom: 0.8em;
+}
+.mw-body pre code, .preview-area pre code { background: none; padding: 0; }
+
+.mw-body table, .preview-area table {
+    border-collapse: collapse;
+    margin-bottom: 0.8em;
+}
+.mw-body table th, .preview-area table th,
+.mw-body table td, .preview-area table td {
+    border: 1px solid #a2a9b1;
+    padding: 0.3em 0.5em;
+}
+.mw-body table th, .preview-area table th { background: #f3f4f6; }
+
+.mw-body img, .preview-area img { max-width: 100%; }
+
+/* 信息栏(正文内嵌 HTML 写法) */
+.mw-body .infobox, .preview-area .infobox {
+    border: 1px solid #a2a9b1;
+    background-color: #f8f9fa;
+    color: black;
+    margin: 0.5em 0 0.5em 1em;
+    padding: 0.2em;
+    float: right;
+    clear: right;
+    width: 20em;
+    font-size: 88%;
+    line-height: 1.5em;
+}
+.mw-body .infobox th, .preview-area .infobox th {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.2em 0.4em;
+    background-color: #e6e9ed;
+    font-weight: bold;
+}
+.mw-body .infobox td, .preview-area .infobox td {
+    vertical-align: top;
+    padding: 0.2em 0.4em;
+    background-color: #fff;
+}
+.mw-body .infobox-title, .preview-area .infobox-title {
+    text-align: center;
+    font-size: 125%;
+    font-weight: bold;
+    padding: 0.2em;
+    background-color: #b0c4de;
+    color: #000;
+}
+.mw-body .infobox-image, .preview-area .infobox-image {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #fff;
+}
+
+/* 目录(自动生成,条目页用) */
+.mw-body .toc, .preview-area .toc {
+    display: table;
+    background-color: #f8f9fa;
+    border: 1px solid #a2a9b1;
+    padding: 7px;
+    font-size: 95%;
+    margin-bottom: 1em;
+}
+.mw-body .toc h2, .preview-area .toc h2 {
+    border: none;
+    font-size: 100%;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    font-family: sans-serif;
+}
+.mw-body .toc ul, .preview-area .toc ul { list-style: none; margin: 0; padding: 0; }
+.mw-body .toc li, .preview-area .toc li { margin-bottom: 3px; }
+.mw-body .toc-number, .preview-area .toc-number { color: #222; }
+
+@media (max-width: 768px) {
+    .mw-body .infobox, .preview-area .infobox {
+        float: none;
+        width: 100%;
+        margin: 0 0 1em 0;
+    }
+}

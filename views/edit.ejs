@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="icon" href="/logo.png">
+    <link href="/wiki-content.css" rel="stylesheet">
     <style>
         body { font-family: sans-serif; background-color: #ffffff;
             background-image: url('/beijingban.png');
@@ -53,52 +54,8 @@
         .toolbar-btn:hover { background: #f3f4f6; }
         .toolbar-btn.active { background: #dbeafe; border-color: #93c5fd; }
         .toolbar-divider { width: 1px; height: 20px; background: #d1d5db; margin: 0 0.25rem; }
-        /* 预览区 Markdown 渲染样式 */
-        .preview-area { font-size: 14px; line-height: 1.7; }
-        .preview-area h1, .preview-area h2, .preview-area h3, .preview-area h4 {
-            font-family: 'Linux Libertine', 'Georgia', 'Times', serif;
-            border-bottom: 1px solid #a2a9b1;
-            padding-bottom: 0.2rem;
-            margin-top: 1.2em;
-            margin-bottom: 0.5em;
-            font-weight: bold;
-        }
-        .preview-area h1 { font-size: 1.6rem; }
-        .preview-area h2 { font-size: 1.4rem; }
-        .preview-area h3 { font-size: 1.2rem; }
-        .preview-area h4 { font-size: 1.1rem; }
-        .preview-area p { margin-bottom: 0.7em; }
-        .preview-area a { color: #0645ad; text-decoration: none; }
-        .preview-area a:hover { text-decoration: underline; }
-        .preview-area ul, .preview-area ol { padding-left: 1.5em; margin-bottom: 0.7em; }
-        .preview-area ul { list-style: disc; }
-        .preview-area ol { list-style: decimal; }
-        .preview-area blockquote {
-            border-left: 3px solid #a2a9b1;
-            padding-left: 1em;
-            color: #555;
-            margin-bottom: 0.7em;
-        }
-        .preview-area code {
-            background: #f3f4f6;
-            padding: 0.1em 0.3em;
-            border-radius: 3px;
-            font-size: 0.9em;
-        }
-        .preview-area pre {
-            background: #f6f8fa;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            padding: 0.8em;
-            overflow-x: auto;
-            margin-bottom: 0.7em;
-        }
-        .preview-area pre code { background: none; padding: 0; }
-        .preview-area table { border-collapse: collapse; margin-bottom: 0.7em; }
-        .preview-area th, .preview-area td { border: 1px solid #a2a9b1; padding: 0.3em 0.5em; }
-        .preview-area th { background: #f3f4f6; }
-        .preview-area img { max-width: 100%; }
-        .preview-area .infobox { float: right; width: 20em; margin: 0 0 1em 1em; font-size: 88%; }
+        /* 预览区容器:内容样式见 /wiki-content.css(与条目页共用) */
+        .preview-area { overflow-y: auto; }
     </style>
 </head>
 <body class="text-gray-800 text-sm leading-6">
