@@ -7,8 +7,8 @@
 
 .mw-body h1, .preview-area h1,
 .mw-body h2, .preview-area h2 {
-    font-family: 'Linux Libertine', 'Georgia', 'Times', serif !important;
-    border-bottom: 1px solid #a2a9b1 !important;
+    font-family: 'Linux Libertine', 'Georgia', 'Times', 'Songti SC', 'SimSun', serif !important;
+    border-bottom: 1px solid #c8ccd1 !important;
     padding-bottom: 0.2rem;
     font-weight: normal !important;
     width: 100%;
@@ -34,6 +34,11 @@
     margin-top: 1em;
     margin-bottom: 0.5em;
 }
+/* 锚点跳转时避开吸顶导航 */
+.mw-body h1, .preview-area h1, .mw-body h2, .preview-area h2,
+.mw-body h3, .preview-area h3, .mw-body h4, .preview-area h4 {
+    scroll-margin-top: 4.5rem;
+}
 .mw-body p, .preview-area p {
     margin-bottom: 0.8em;
     line-height: 1.6;
@@ -42,12 +47,14 @@
 .mw-body a, .preview-area a {
     color: #0645ad;
     text-decoration: none;
+    transition: color 0.15s ease;
 }
 .mw-body a:hover, .preview-area a:hover {
+    color: #06347e;
     text-decoration: underline;
 }
 .mw-body .link-red, .preview-area .link-red { color: #ba0000; text-decoration: none; }
-.mw-body .link-red:hover, .preview-area .link-red:hover { text-decoration: underline; }
+.mw-body .link-red:hover, .preview-area .link-red:hover { color: #8a0000; text-decoration: underline; }
 .mw-body .link-external, .preview-area .link-external {
     color: #3366bb;
     background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgdmlld0JveD0iMCAwIDEwIDEwIj48cGF0aCBkPSJNOSAzdjVIM3YtMmgxdjFoNHYtNGgtMXYtMWgyem0tMyAybC0zIDMgMSAxIDMtMyAxIDF2LTRoLTRsMSAxeiIgZmlsbD0iIzMzNjZiYiIvPjwvc3ZnPg==') no-repeat right center;
@@ -62,26 +69,29 @@
 .mw-body ol, .preview-area ol { list-style: decimal; }
 
 .mw-body blockquote, .preview-area blockquote {
-    border-left: 3px solid #a2a9b1;
-    padding-left: 1em;
+    border-left: 3px solid #c8ccd1;
+    background: #f8fafc;
+    border-radius: 0 4px 4px 0;
+    padding: 0.3em 1em;
     color: #555;
     margin-bottom: 0.8em;
 }
 .mw-body code, .preview-area code {
-    background: #f3f4f6;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
     padding: 0.1em 0.3em;
     border-radius: 3px;
     font-size: 0.9em;
 }
 .mw-body pre, .preview-area pre {
-    background: #f6f8fa;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
     padding: 0.8em;
     overflow-x: auto;
     margin-bottom: 0.8em;
 }
-.mw-body pre code, .preview-area pre code { background: none; padding: 0; }
+.mw-body pre code, .preview-area pre code { background: none; border: none; padding: 0; }
 
 .mw-body table, .preview-area table {
     border-collapse: collapse;
@@ -89,16 +99,17 @@
 }
 .mw-body table th, .preview-area table th,
 .mw-body table td, .preview-area table td {
-    border: 1px solid #a2a9b1;
+    border: 1px solid #c8ccd1;
     padding: 0.3em 0.5em;
 }
-.mw-body table th, .preview-area table th { background: #f3f4f6; }
+.mw-body table th, .preview-area table th { background: #f1f5f9; }
+.mw-body table:not(.infobox) tr:hover td, .preview-area table:not(.infobox) tr:hover td { background: #f8fafc; }
 
-.mw-body img, .preview-area img { max-width: 100%; }
+.mw-body img, .preview-area img { max-width: 100%; border-radius: 3px; }
 
 /* 信息栏(正文内嵌 HTML 写法) */
 .mw-body .infobox, .preview-area .infobox {
-    border: 1px solid #a2a9b1;
+    border: 1px solid #c8ccd1;
     background-color: #f8f9fa;
     color: black;
     margin: 0.5em 0 0.5em 1em;
@@ -108,6 +119,7 @@
     width: 20em;
     font-size: 88%;
     line-height: 1.5em;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
 }
 .mw-body .infobox th, .preview-area .infobox th {
     text-align: left;
@@ -139,7 +151,9 @@
 .mw-body .toc, .preview-area .toc {
     display: table;
     background-color: #f8f9fa;
-    border: 1px solid #a2a9b1;
+    border: 1px solid #c8ccd1;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
     padding: 7px;
     font-size: 95%;
     margin-bottom: 1em;

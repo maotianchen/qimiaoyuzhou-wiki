@@ -1,0 +1,132 @@
+/* 全站视觉润色(纯装饰:字体渲染、过渡、阴影、圆角、焦点态)
+   各模板在 </style> 之后引入,不改任何布局与功能 */
+
+html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+}
+
+/* 更清晰的系统字体栈 + 抗锯齿渲染 */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* 衬线标题补中文宋体回退 */
+.wiki-serif {
+    font-family: 'Linux Libertine', 'Georgia', 'Times', 'Songti SC', 'SimSun', serif;
+}
+
+/* 选中文字配色 */
+::selection {
+    background: #b3d4fc;
+    color: #0b2545;
+}
+
+/* 链接与按钮:柔和的颜色过渡 */
+a {
+    transition: color 0.15s ease;
+    text-underline-offset: 2px;
+}
+.link-blue:hover { color: #06347e; }
+.link-red:hover { color: #8a0000; }
+
+button {
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease,
+        color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+/* 键盘焦点可见性(不影响鼠标点击) */
+:focus-visible {
+    outline: 2px solid #3366cc;
+    outline-offset: 2px;
+}
+
+/* 顶栏:毛玻璃 + 柔和下影(背景色沿用各页内联样式) */
+body nav {
+    -webkit-backdrop-filter: blur(10px) saturate(1.4);
+    backdrop-filter: blur(10px) saturate(1.4);
+    border-bottom-color: #dbe2ea !important;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+/* 站点 logo 悬停微交互 */
+a.group img { transition: transform 0.2s ease; }
+a.group:hover img { transform: scale(1.08); }
+
+/* 主内容卡片:更柔和的描边与层次阴影(覆盖 Tailwind 的 border/shadow 工具类) */
+body main {
+    border-color: #dbe2ea !important;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06) !important;
+}
+@media (min-width: 768px) {
+    body main { border-radius: 10px; }
+}
+
+/* 首页内容盒:圆角 + 阴影 + 悬停轻微浮起 */
+.wiki-box {
+    border-color: #c9d4e0 !important;
+    border-radius: 8px !important;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.wiki-box:hover {
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
+    transform: translateY(-1px);
+}
+.wiki-box-header { border-bottom-color: #d7dee7; }
+
+/* 首页欢迎横幅:柔和渐变 */
+.welcome-banner {
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 55%, #f0f9ff 100%);
+    border-color: #bbf7d0 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 14px rgba(16, 185, 129, 0.08);
+}
+
+/* 首页板块标题:细腻的分隔线与图标留白 */
+.wiki-box-header {
+    letter-spacing: 0.01em;
+}
+.wiki-box-header i {
+    transition: transform 0.2s ease;
+}
+.wiki-box:hover .wiki-box-header i {
+    transform: scale(1.12);
+}
+
+/* 首页最近更改列表:柔和的分隔 */
+.wiki-box ul.list-disc li {
+    line-height: 1.7;
+}
+
+/* 编辑器控件 */
+.toolbar-btn:active { transform: translateY(1px); }
+#edit-form button[type="submit"] {
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12);
+}
+#edit-form button[type="submit"]:hover {
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18);
+}
+#upload-box { transition: border-color 0.15s ease, background-color 0.15s ease; }
+#upload-box:hover { background-color: #f0f7ff; }
+
+/* 表单控件过渡 */
+input, textarea, select {
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* 细滚动条(编辑区 / 预览区) */
+.preview-area::-webkit-scrollbar, textarea::-webkit-scrollbar { width: 8px; }
+.preview-area::-webkit-scrollbar-thumb, textarea::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
