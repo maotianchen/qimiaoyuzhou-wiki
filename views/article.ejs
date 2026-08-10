@@ -132,6 +132,11 @@
             </div>
 
             <div class="text-sm text-gray-500 mb-4">奇喵宇宙维基,自由的百科全书</div>
+            <% if (page.author) { %>
+            <div class="text-xs text-gray-500 mb-3">
+                <i class="fas fa-user-edit mr-1"></i>编写人:<a href="#" class="link-blue"><%= page.author %></a>
+            </div>
+            <% } %>
 
             <!-- Rendered Markdown Body + TOC -->
             <div class="mw-body">

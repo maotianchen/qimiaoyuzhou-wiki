@@ -69,7 +69,7 @@ router.post('/pages/batch', (req, res) => {
   items.forEach((item, i) => {
     const { title, content, summary, author } = item || {};
     try {
-      const page = storage.writePage(title, content);
+      const page = storage.writePage(title, content, { author });
       history.addEntry({ title: page.title, type: 'create', summary, author });
       results.push({ index: i, ok: true, title: page.title });
       okCount += 1;
@@ -96,7 +96,7 @@ router.get('/pages/:title', (req, res) => {
 router.post('/pages', (req, res) => {
   const { title, content, summary, author } = req.body || {};
   try {
-    const page = storage.writePage(title, content);
+    const page = storage.writePage(title, content, { author });
     history.addEntry({ title: page.title, type: 'create', summary, author });
     res.status(201).json(page);
   } catch (err) {
@@ -110,6 +110,7 @@ router.put('/pages/:title', (req, res) => {
   try {
     const page = storage.writePage(title || req.params.title, content, {
       originalTitle: req.params.title,
+      author,
     });
     history.addEntry({ title: page.title, type: 'edit', summary, author });
     res.json(page);
