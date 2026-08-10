@@ -6,6 +6,13 @@ const history = require('../lib/history');
 
 const router = express.Router();
 
+// ---- Agent 录入页:展示提示词/API 地址/使用方法 ----
+router.get('/agent', (req, res) => {
+  const proto = req.headers['x-forwarded-proto'] || req.protocol;
+  const host = req.headers.host;
+  res.render('agent', { apiBase: `${proto}://${host}` });
+});
+
 // ---- 随机条目:重定向到一篇随机页面 ----
 router.get('/random', (req, res) => {
   const pages = storage.listPages();

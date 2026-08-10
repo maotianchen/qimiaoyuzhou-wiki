@@ -58,6 +58,28 @@ router.post('/preview', (req, res) => {
   res.json({ html });
 });
 
+// ---- 批量新建条目(供 agent 批量导入) ----
+router.post('/pages/batch', (req, res) => {
+  const items = req.body;
+  if (!Array.isArray(items) || !items.length) {
+    return res.status(400).json({ error: '请求体需为条目数组,如 [{title, content}, ...]' });
+  }
+  const results = [];
+  let okCount = 0;
+  items.forEach((item, i) => {
+    const { title, content, summary, author } = item || {};
+    try {
+      const page = storage.writePage(title, content);
+      history.addEntry({ title: page.title, type: 'create', summary, author });
+      results.push({ index: i, ok: true, title: page.title });
+      okCount += 1;
+    } catch (err) {
+      results.push({ index: i, ok: false, title: title || '', error: err.message });
+    }
+  });
+  res.json({ ok: okCount, failed: results.length - okCount, results });
+});
+
 // ---- 条目列表 ----
 router.get('/pages', (req, res) => {
   res.json(storage.listPages());
