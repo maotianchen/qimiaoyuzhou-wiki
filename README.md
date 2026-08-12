@@ -149,6 +149,32 @@ sudo nginx -t && sudo systemctl reload nginx
 - 首次部署后确保 `content/media` 目录可写:`sudo chown -R <用户>:<用户> content`。
 - Nginx 已设 `client_max_body_size 10m`,无需改动。
 
+### 6.6 上传密钥门禁
+
+为防磁盘写满,批量创建与图片上传需凭一次性密钥:
+
+1. **申请密钥**:`POST /api/upload-key/request`,body `{estimatedBytes}`(本次预估体积,字节)。服务器检查磁盘剩余空间,加预估后仍 >5GB 才签发。
+2. **密钥特性**:24 小时有效、一次性、上传总量 ≤ 预估 + 100MB;超配额自动作废。
+3. **携带密钥**:批量上传/图片上传时加请求头 `x-upload-key: <密钥>`。
+   - 单条创建 `POST /api/pages` 不需要密钥。
+4. **查询状态**:`GET /api/upload-key/:key` 返回 `{usedBytes, quotaBytes, expiresAt, consumed}`。
+
+申请示例:
+
+```bash
+curl -X POST https://qimiaoyuzhou.wiki/api/upload-key/request \
+  -H "Content-Type: application/json" \
+  -d '{"estimatedBytes": 50000000}'
+# {"key":"...","expiresAt":...,"quotaBytes":60000000}
+
+curl -X POST https://qimiaoyuzhou.wiki/api/pages/batch \
+  -H "Content-Type: application/json" \
+  -H "x-upload-key: <密钥>" \
+  -d '[{"title":"测试","content":"正文"}]'
+```
+
+阈值在 `lib/disk.js` 的 `MIN_FREE`(默认 5GB)与 `lib/upload_gate.js` 的 `QUOTA_SLACK`(默认 100MB)可调。
+
 ### 7. 防火墙与端口
 
 **需要开放的端口**(取决于是否用 Nginx):
