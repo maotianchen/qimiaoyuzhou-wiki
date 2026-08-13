@@ -146,9 +146,9 @@
                         <h2>目录</h2>
                         <span class="toc-toggle text-xs text-blue-600 cursor-pointer">[隐藏]</span>
                     </div>
-                    <ul>
+                    <ul style="column-count: <%= tocCols %>;">
                         <% toc.forEach(function(h, i) { %>
-                        <li class="toclevel-1 tocsection-<%= i + 1 %>">
+                        <li class="toclevel-1 tocsection-<%= i + 1 %>" style="break-inside: avoid;">
                             <a href="#<%= h.id %>" class="link-blue"><span class="toc-number"><%= i + 1 %></span> <span class="toctext"><%= h.text %></span></a>
                         </li>
                         <% }) %>

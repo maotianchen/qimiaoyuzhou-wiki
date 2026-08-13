@@ -23,7 +23,9 @@ router.get('/wiki/:title', (req, res, next) => {
     const page = storage.readPage(req.params.title);
     if (!page) return res.status(404).render('error', { title: req.params.title });
     const { html, toc } = renderMarkdown(page.raw);
-    res.render('article', { page, html, toc });
+    // 目录每 10 条一列,列数上限 4
+    const tocCols = toc.length ? Math.min(Math.max(1, Math.ceil(toc.length / 10)), 4) : 1;
+    res.render('article', { page, html, toc, tocCols });
   } catch (err) { next(err); }
 });
 
