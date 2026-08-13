@@ -175,6 +175,13 @@ curl -X POST https://qimiaoyuzhou.wiki/api/pages/batch \
 
 阈值在 `lib/disk.js` 的 `MIN_FREE`(默认 5GB)与 `lib/upload_gate.js` 的 `QUOTA_SLACK`(默认 100MB)可调。
 
+### 6.7 点赞与热门词条
+
+- **点赞**:条目页「👍」按钮,`POST /api/like/:title`。同一 IP 每词条只能点一次(数据存 `data/likes.json`);重复点返回 409。
+- **热门词条**:首页「特色条目」上方展示点赞数最多的 3 个词条。
+- **接口**:`GET /api/likes/top` 返回 `{top: [{title, count}]}`。
+- nginx 反代下已启用 `trust proxy`,`req.ip` 取真实客户端 IP。
+
 ### 7. 防火墙与端口
 
 **需要开放的端口**(取决于是否用 Nginx):

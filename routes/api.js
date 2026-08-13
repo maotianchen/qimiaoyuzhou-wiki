@@ -8,9 +8,24 @@ const storage = require('../lib/storage');
 const history = require('../lib/history');
 const disk = require('../lib/disk');
 const uploadGate = require('../lib/upload_gate');
+const likes = require('../lib/likes');
 const { renderMarkdown } = require('../lib/render');
 
 const router = express.Router();
+
+// ---- 点赞:同一 IP 每词条一次 ----
+router.post('/like/:title', (req, res) => {
+  const title = req.params.title;
+  const result = likes.addLike(title, req.ip);
+  if (result.code === 404) return res.status(404).json({ error: result.reason });
+  if (result.code === 409) return res.status(409).json({ error: result.reason, count: result.count });
+  res.json({ count: result.count });
+});
+
+// ---- 热门词条 top3 ----
+router.get('/likes/top', (req, res) => {
+  res.json({ top: likes.topLikes(3) });
+});
 
 // ---- 上传密钥:申请(需空间充足)、查询 ----
 router.post('/upload-key/request', (req, res) => {

@@ -138,6 +138,16 @@
             </div>
             <% } %>
 
+            <!-- 点赞 -->
+            <div class="mb-4">
+                <button id="like-btn" type="button"
+                        class="inline-flex items-center gap-1.5 border border-gray-300 rounded-full px-4 py-1.5 text-sm hover:border-yellow-400 hover:bg-yellow-50 transition-colors">
+                    <i class="fas fa-thumbs-up text-gray-500"></i>
+                    <span id="like-count"><%= likeCount %></span>
+                </button>
+                <span id="like-msg" class="text-xs text-gray-500 ml-2"></span>
+            </div>
+
             <!-- Rendered Markdown Body + TOC -->
             <div class="mw-body">
                 <% if (toc.length) { %>
@@ -227,6 +237,42 @@
                 ul.style.display = hidden ? '' : 'none';
                 el.textContent = hidden ? '[隐藏]' : '[展开]';
             });
+        });
+
+        // 点赞
+        const likeBtn = document.getElementById('like-btn');
+        const likeCountEl = document.getElementById('like-count');
+        const likeMsgEl = document.getElementById('like-msg');
+        const pageTitle = '<%= page.title.replace(/\\'/g, "\\\\'") %>';
+        let liked = false;
+
+        likeBtn.addEventListener('click', async function () {
+            if (liked) return;
+            try {
+                const res = await fetch('/api/like/' + encodeURIComponent(pageTitle), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    liked = true;
+                    likeCountEl.textContent = data.count;
+                    likeMsgEl.textContent = '已点赞!';
+                    likeMsgEl.className = 'text-xs text-green-600 ml-2';
+                    likeBtn.classList.add('border-yellow-400', 'bg-yellow-50');
+                } else if (res.status === 409) {
+                    liked = true;
+                    likeCountEl.textContent = data.count;
+                    likeMsgEl.textContent = '您已为该词条点过赞';
+                    likeMsgEl.className = 'text-xs text-gray-500 ml-2';
+                } else {
+                    likeMsgEl.textContent = data.error || '操作失败';
+                    likeMsgEl.className = 'text-xs text-red-600 ml-2';
+                }
+            } catch (err) {
+                likeMsgEl.textContent = '网络错误,请重试';
+                likeMsgEl.className = 'text-xs text-red-600 ml-2';
+            }
         });
     </script>
 </body>

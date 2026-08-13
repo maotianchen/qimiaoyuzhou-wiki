@@ -180,6 +180,25 @@
                 </div>
             </div>
 
+            <!-- 热门词条 -->
+            <% if (hot.length) { %>
+            <div class="wiki-box rounded-sm flex flex-col mb-4">
+                <div class="wiki-box-header bg-yellow-50 border-yellow-200">
+                    <i class="fas fa-trophy text-yellow-500 mr-2"></i> 热门词条
+                </div>
+                <div class="p-4">
+                    <ol class="space-y-2">
+                        <% hot.forEach(function(h) { %>
+                        <li class="flex items-center justify-between">
+                            <a href="/wiki/<%= encodeURIComponent(h.title) %>" class="link-blue font-bold"><%= h.title %></a>
+                            <span class="text-xs text-gray-500"><i class="fas fa-thumbs-up text-gray-400 mr-1"></i><%= h.count %> 赞</span>
+                        </li>
+                        <% }) %>
+                    </ol>
+                </div>
+            </div>
+            <% } %>
+
             <!-- Top Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
 

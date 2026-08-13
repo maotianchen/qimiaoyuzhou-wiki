@@ -10,6 +10,9 @@ const specialRouter = require('./routes/special');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// 信任反向代理(nginx),使 req.ip 取到 X-Forwarded-For 的真实客户端 IP
+app.set('trust proxy', 1);
+
 // 解析 JSON 请求体(编辑/新建条目的 POST/PUT)
 app.use(express.json({ limit: '2mb' }));
 
