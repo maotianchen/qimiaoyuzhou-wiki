@@ -167,11 +167,12 @@ router.post('/pages', (req, res) => {
 
 // ---- 更新条目(支持标题重命名:body.title 为新标题) ----
 router.put('/pages/:title', (req, res) => {
-  const { content, title, summary, author } = req.body || {};
+  const { content, title, summary, author, birthday } = req.body || {};
   try {
     const page = storage.writePage(title || req.params.title, content, {
       originalTitle: req.params.title,
       author,
+      birthday,
     });
     history.addEntry({ title: page.title, type: 'edit', summary, author });
     res.json(page);
